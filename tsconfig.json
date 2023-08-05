@@ -1,0 +1,44 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    // Tanand 
+    "noImplicitOverride": true,
+    "useUnknownInCatchVariables": false,
+    "strictNullChecks": true,
+    "baseUrl": ".",
+    "types": ["node"],
+    "paths": {
+      "@/*": ["src/*"],
+      "~/*": ["src/models/*"]
+    },
+    "typeRoots": ["node_modules/@types"]
+  },
+  "include": [
+    "src"
+  ],
+  // Tanand
+  "skipLibCheck": true,
+  "forceConsistentCasingInFileNames": true,
+  "ts-node": {
+    "files": true
+  }
+}
