@@ -19,18 +19,25 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-
     // Tanand 
     "noImplicitOverride": true,
     "useUnknownInCatchVariables": false,
     "strictNullChecks": true,
     "baseUrl": ".",
-    "types": ["node"],
+    "types": [
+      "node"
+    ],
     "paths": {
-      "@/*": ["src/*"],
-      "~/*": ["src/models/*"]
+      "@/*": [
+        "src/*"
+      ],
+      "~/*": [
+        "src/models/*"
+      ]
     },
-    "typeRoots": ["node_modules/@types"]
+    "typeRoots": [
+      "node_modules/@types"
+    ]
   },
   "include": [
     "src"

@@ -12,6 +12,6 @@ export interface Request<
     ResBody extends ResponseBody = undefined,
     ReqBody extends Json | undefined = undefined,
     ReqQuery = Query
-> extends e.Request<Params, ResBody, ReqBody, ReqQuery> {}
+> extends e.Request<Params, ResBody, ReqBody, ReqQuery> { }
 
-export interface Response<ResBody extends ResponseBody = undefined> extends e.Response<ResBody> {}
+export interface Response<ResBody extends ResponseBody = undefined> extends e.Response<ResBody> { }

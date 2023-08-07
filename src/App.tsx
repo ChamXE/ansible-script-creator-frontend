@@ -2,11 +2,18 @@ import React from 'react';
 import './App.css';
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import Dashboard from '@/pages/dashboard';
-import Login from '@/pages/login';
-import SideBar from '@/components/sidebar';
+import Login from '@/pages/user/login';
+import Register from '@/pages/user/register';
+import Profile from '@/pages/user/profile';
+import NavBar from '@/components/app/navbar';
+import useToken from '@/components/app/useToken'
 
 function App() {
-	const isLoggedIn = true;
+	// TODO => token n login mechanism
+	const { userToken, setUserToken } = useToken();
+
+	const isLoggedIn = userToken.token? true: false;
+	
 	const renderProtectedRoute = (element: React.ReactElement) => {
 		return isLoggedIn ? element : <Navigate to="/login" replace={true} />;
 	};
@@ -15,9 +22,9 @@ function App() {
 	};
 
 	return (
-		<div className="fts-client" style={{ height: "100%", display: "flex" }}>
+		<div style={{ minHeight: "100vh", minWidth: "100vw" }}>
 			<BrowserRouter>
-				{isLoggedIn && <SideBar />}
+				<NavBar />
 				<div className="client-content">
 					<Routes>
 						<Route
@@ -26,10 +33,17 @@ function App() {
 						/>
 						<Route 
 							path="/login" 
-							element={denyGoLoginPage(<Login />)} />
+							element={denyGoLoginPage(<Login setUserToken={setUserToken} />)} />
+						<Route 
+							path="/register" 
+							element={denyGoLoginPage(<Register />)} />
 						<Route
 							path="/dashboard"
 							element={renderProtectedRoute(<Dashboard />)}
+						/>
+						<Route 
+							path="/profile"
+							element={renderProtectedRoute(<Profile />)}
 						/>
 					</Routes>
 				</div>

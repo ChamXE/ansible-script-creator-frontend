@@ -1,0 +1,5 @@
+.body-wrapper {
+    min-height: 100vh;
+    min-width: 100vw;
+    background-color: rgb(235, 232, 232);
+}
