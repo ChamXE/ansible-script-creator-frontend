@@ -7,21 +7,27 @@ import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 const pages = ['Project', 'Device'];
 const settings = ['Account', 'Dashboard', 'Logout'];
+const devices = ['Server', 'Router', 'Switch', 'Host'];
 
-function NavBar() {
+interface NavBarProps {
+    setUserToken: (userToken: Token) => void;
+}
+
+function NavBar({ setUserToken }: NavBarProps) {
     const navigate = useNavigate();
-    const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-    const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+    const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
+    const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+    const [anchorElDevice, setAnchorElDevice] = useState<null | HTMLElement>(null);
 
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElNav(event.currentTarget);
@@ -30,23 +36,27 @@ function NavBar() {
         setAnchorElUser(event.currentTarget);
     };
 
+    const handleOpenDeviceMenu = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorElDevice(event.currentTarget);
+    }
+
     const handleCloseNavMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElNav(null);
-        switch(event.currentTarget.textContent) {
+        switch (event.currentTarget.textContent) {
             case "Project":
                 navigate('/project');
                 break;
             case "Device":
-                navigate('/device');
+                handleOpenDeviceMenu(event);
                 break
             default:
                 break;
         }
     };
-    
+
     const handleCloseUserMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElUser(null);
-        switch(event.currentTarget.textContent) {
+        switch (event.currentTarget.textContent) {
             case "Account":
                 navigate('/profile');
                 break;
@@ -54,12 +64,36 @@ function NavBar() {
                 navigate('/dashboard');
                 break
             case "Logout":
-                // logout action
+                setUserToken({
+                    username: "",
+                    token: ""
+                });
+                sessionStorage.removeItem("userToken");
                 break;
             default:
                 break;
         }
     };
+
+    const handleCloseDeviceMenu = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorElDevice(null);
+        switch (event.currentTarget.textContent) {
+            case "Server":
+                navigate('/server');
+                break;
+            case "Router":
+                navigate('/router');
+                break
+            case "Switch":
+                navigate('/switch');
+                break;
+            case "Host":
+                navigate('/host');
+                break
+            default:
+                break;
+        }
+    }
 
     return (
         <AppBar position="static" >
@@ -86,6 +120,7 @@ function NavBar() {
 
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                         <IconButton
+                            id="test"
                             size="large"
                             aria-label="account of current user"
                             aria-controls="menu-appbar"
@@ -116,6 +151,28 @@ function NavBar() {
                             {pages.map((page) => (
                                 <MenuItem key={page} onClick={handleCloseNavMenu}>
                                     <Typography textAlign="center">{page}</Typography>
+                                </MenuItem>
+                            ))}
+                        </Menu>
+                        <Menu
+                            sx={{ mt: '45px' }}
+                            id="device-appbar"
+                            anchorEl={anchorElDevice}
+                            anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            keepMounted
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            open={Boolean(anchorElDevice)}
+                            onClose={handleCloseDeviceMenu}
+                        >
+                            {devices.map((devices) => (
+                                <MenuItem key={devices} onClick={handleCloseDeviceMenu}>
+                                    <Typography textAlign="center">{devices}</Typography>
                                 </MenuItem>
                             ))}
                         </Menu>
