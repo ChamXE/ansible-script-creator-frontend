@@ -66,7 +66,7 @@ function Register() {
         const confirmPassword = data.get('confirmPassword')?.toString();
         const email = data.get('email')?.toString();
         if (username && password && confirmPassword && email) {
-            if(password === confirmPassword) {
+            if (password === confirmPassword) {
                 const result = await createNewUser({
                     username,
                     password,
@@ -86,7 +86,7 @@ function Register() {
         }));
         switch (event.target.name) {
             case "password":
-                setConfirmPasswordDisabled(event.target.value? false: true);
+                setConfirmPasswordDisabled(event.target.value ? false : true);
                 checkConfirmPassword("password", event.target.value);
                 break;
             case "confirmPassword":
@@ -98,7 +98,7 @@ function Register() {
     }
 
     const checkConfirmPassword = async (name: string, value: string) => {
-        if(name === "confirmPassword") {
+        if (name === "confirmPassword") {
             if (user.password !== value) {
                 setConfirmPasswordErrored(true);
             }
@@ -107,7 +107,7 @@ function Register() {
             }
         }
         else {
-            if(user.confirmPassword) {
+            if (user.confirmPassword) {
                 if (user.confirmPassword !== value) {
                     setConfirmPasswordErrored(true);
                 }
@@ -120,7 +120,7 @@ function Register() {
 
     useEffect(() => {
         const checkTimeout = setTimeout(async () => {
-            if(user.username) {
+            if (user.username) {
                 const isAvailable = await checkUsernameAvailability(user.username);
                 setUsernameAvailability(isAvailable === 1 ? true : false);
             }
@@ -132,7 +132,7 @@ function Register() {
     }, [user.username]);
 
     useEffect(() => {
-        if(usernameAvailability && !confirmPasswordDisabled && !confirmPasswordErrored) {
+        if (usernameAvailability && !confirmPasswordDisabled && !confirmPasswordErrored) {
             setSubmitButtonDisabled(false);
         }
         else {

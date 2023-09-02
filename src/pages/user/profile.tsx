@@ -50,8 +50,8 @@ async function getUser(username: string): Promise<User | null> {
 
 async function changePassword(passwords: Credentials): Promise<number> {
     const response = await axios.post(`${getURL()}/user/changePassword`, passwords);
-    if(!response.data.result) return 1;
-    if(!response.data.data.success) return 1;
+    if (!response.data.result) return 1;
+    if (!response.data.data.success) return 1;
     return 0;
 }
 
@@ -66,7 +66,7 @@ function ChangePasswordModal({ userToken }: ChangePasswordModalProps) {
         newPassword: "",
         confirmNewPassword: ""
     });
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const [oldPasswordFilled, setOldPasswordFilled] = useState(false);
@@ -82,14 +82,14 @@ function ChangePasswordModal({ userToken }: ChangePasswordModalProps) {
         const newPassword = data.get('newPassword')?.toString();
         const confirmNewPassword = data.get('confirmNewPassword')?.toString();
         if (password && newPassword && confirmNewPassword) {
-            if(newPassword === confirmNewPassword) {
+            if (newPassword === confirmNewPassword) {
                 const result = await changePassword({
                     username: passwords.username,
                     password,
                     newPassword,
                     confirmNewPassword
                 });
-                if(result) {
+                if (result) {
                     setOldPasswordErrored(true);
                     return;
                 }
@@ -108,11 +108,11 @@ function ChangePasswordModal({ userToken }: ChangePasswordModalProps) {
         }));
         switch (event.target.name) {
             case "password":
-                setOldPasswordFilled(event.target.value? true: false);
-                if(event.target.value && oldPasswordErrored) setOldPasswordErrored(false);
+                setOldPasswordFilled(event.target.value ? true : false);
+                if (event.target.value && oldPasswordErrored) setOldPasswordErrored(false);
                 break;
             case "newPassword":
-                setConfirmPasswordDisabled(event.target.value? false: true);
+                setConfirmPasswordDisabled(event.target.value ? false : true);
                 checkConfirmPassword("newPassword", event.target.value);
                 break;
             case "confirmNewPassword":
@@ -124,7 +124,7 @@ function ChangePasswordModal({ userToken }: ChangePasswordModalProps) {
     }
 
     const checkConfirmPassword = async (name: string, value: string) => {
-        if(name === "confirmNewPassword") {
+        if (name === "confirmNewPassword") {
             if (passwords.newPassword !== value) {
                 setConfirmPasswordErrored(true);
             }
@@ -133,7 +133,7 @@ function ChangePasswordModal({ userToken }: ChangePasswordModalProps) {
             }
         }
         else {
-            if(passwords.confirmNewPassword) {
+            if (passwords.confirmNewPassword) {
                 if (passwords.confirmNewPassword !== value) {
                     setConfirmPasswordErrored(true);
                 }
@@ -145,7 +145,7 @@ function ChangePasswordModal({ userToken }: ChangePasswordModalProps) {
     }
 
     useEffect(() => {
-        if(oldPasswordFilled && !confirmPasswordDisabled && !confirmPasswordErrored) {
+        if (oldPasswordFilled && !confirmPasswordDisabled && !confirmPasswordErrored) {
             setSubmitButtonDisabled(false);
         }
         else {
@@ -192,7 +192,7 @@ function ChangePasswordModal({ userToken }: ChangePasswordModalProps) {
                             }}
                             onChange={handleChange}
                             error={oldPasswordErrored}
-                            helperText={oldPasswordErrored? "Old password is wrong!" : ""}        
+                            helperText={oldPasswordErrored ? "Old password is wrong!" : ""}
                         />
                         <TextField
                             margin="normal"
@@ -205,7 +205,7 @@ function ChangePasswordModal({ userToken }: ChangePasswordModalProps) {
                             inputProps={{
                                 minLength: 8
                             }}
-                            onChange={handleChange}    
+                            onChange={handleChange}
                         />
                         <TextField
                             margin="normal"
@@ -250,8 +250,9 @@ function Profile() {
     useEffect(() => {
         const user = async () => {
             const userData = await getUser(userToken.username);
-            if(userData) setUser(userData);
-        }
+            if (userData) setUser(userData);
+        };
+
         user();
     }, [])
 
@@ -297,7 +298,7 @@ function Profile() {
                         }}
                         value={user.email}
                     />
-                    <ChangePasswordModal userToken={userToken}/>
+                    <ChangePasswordModal userToken={userToken} />
                 </Box>
             </Box>
         </Container>
