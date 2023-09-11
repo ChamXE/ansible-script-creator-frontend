@@ -6,8 +6,11 @@ import Login from '@/pages/user/login';
 import Register from '@/pages/user/register';
 import Profile from '@/pages/user/profile';
 import NavBar from '@/components/app/navbar';
-import useToken from '@/components/app/useToken'
-import Device from '@/pages/device/device';
+import useToken from '@/components/app/useToken';
+import SwitchList from './pages/device/list/switchList';
+import ServerList from './pages/device/list/serverList';
+import HostList from './pages/device/list/hostList';
+import RouterList from './pages/device/list/routerList';
 
 function App() {
 	// TODO => token n login mechanism
@@ -48,19 +51,19 @@ function App() {
 						/>
 						<Route
 							path="/server"
-							element={renderProtectedRoute(<Device deviceType='server' />)}
+							element={renderProtectedRoute(<ServerList />)}
 						/>
 						<Route
 							path="/router"
-							element={renderProtectedRoute(<Device deviceType='router' />)}
+							element={renderProtectedRoute(<RouterList />)}
 						/>
 						<Route
 							path="/switch"
-							element={renderProtectedRoute(<Device deviceType='switch' />)}
+							element={renderProtectedRoute(<SwitchList />)}
 						/>
 						<Route
 							path="/host"
-							element={renderProtectedRoute(<Device deviceType='host' />)}
+							element={renderProtectedRoute(<HostList />)}
 						/>
 					</Routes>
 				</div>

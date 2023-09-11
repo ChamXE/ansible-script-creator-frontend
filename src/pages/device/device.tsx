@@ -8,7 +8,6 @@ import { useEffect, useState } from 'react';
 import { Server, Router, Switch, Host } from '~/device';
 import SaveIcon from '@mui/icons-material/Save';
 import EditIcon from '@mui/icons-material/Edit';
-import CreateDevice from './createDevice';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 interface DeviceProps {
@@ -200,21 +199,7 @@ function Device({ deviceType }: DeviceProps) {
     }, [deviceType, newData]);
 
     return (
-        <Container
-            component="main"
-            sx={{ mt: '1.5rem', ml: '3rem' }}
-        >
-            <Box component="span" mb="1rem" display="flex" alignItems="center">
-                <Typography fontSize='1.5rem'>{curDevice}</Typography>
-                <CreateDevice newDataIncoming={newDataIncoming} deviceType={deviceType} />
-            </Box>
-            {
-                device ?
-                    generateTable(device) :
-                    generateTable([])
-            }
-
-        </Container>
+        <></>
     )
 }
 

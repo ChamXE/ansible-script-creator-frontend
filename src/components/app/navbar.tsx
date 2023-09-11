@@ -17,7 +17,7 @@ import { useState } from 'react';
 
 const pages = ['Project', 'Device'];
 const settings = ['Account', 'Dashboard', 'Logout'];
-const devices = ['Server', 'Router', 'Switch', 'Host'];
+const devices = ['Router', 'Switch', 'Host'];
 
 interface NavBarProps {
     setUserToken: (userToken: Token) => void;
