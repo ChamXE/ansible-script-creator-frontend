@@ -67,6 +67,9 @@ function ServerList() {
                     pagination: {
                         paginationModel: { page: 0, pageSize: 5 },
                     },
+                    sorting: {
+                        sortModel: [{ field: 'serverid', sort: 'asc' }],
+                    },
                 }}
                 pageSizeOptions={[5, 10]}
                 getRowId={(row) => row.serverid}

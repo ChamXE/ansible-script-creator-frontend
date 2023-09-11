@@ -108,6 +108,9 @@ function RouterList() {
                     pagination: {
                         paginationModel: { page: 0, pageSize: 5 },
                     },
+                    sorting: {
+                        sortModel: [{ field: 'routerid', sort: 'asc' }],
+                    },
                 }}
                 pageSizeOptions={[5, 10]}
                 getRowId={(row) => row.routerid}

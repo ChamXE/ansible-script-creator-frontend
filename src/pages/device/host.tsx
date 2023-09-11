@@ -67,6 +67,9 @@ function HostList() {
                     pagination: {
                         paginationModel: { page: 0, pageSize: 5 },
                     },
+                    sorting: {
+                        sortModel: [{ field: 'hostid', sort: 'asc' }],
+                    },
                 }}
                 pageSizeOptions={[5, 10]}
                 getRowId={(row) => row.hostid}
