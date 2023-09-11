@@ -1,4 +1,3 @@
-import useToken from '@/components/app/useToken';
 import { Backdrop, Box, Button, Container, Divider, Fade, Modal, TextField, Typography } from '@mui/material';
 import { Server } from '~/device';
 import { createDevice } from '@/components/device/functions';
@@ -24,7 +23,6 @@ const style = {
 };
 
 function CreateEditServer({ server, resetEdit, newDataIncoming }: CreateEditServerProps) {
-    const { userToken } = useToken();
     const [open, setOpen] = useState<boolean>(server ? true: false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -102,7 +100,6 @@ function CreateEditServer({ server, resetEdit, newDataIncoming }: CreateEditServ
         const s: Server = {
             serverid: server ? server.serverid : null,
             servername: formData.get('servername')!.toString(),
-            username: server ? server.username : userToken.username,
             ip: formData.get('ip')!.toString(),
             rootcredential: {
                 username: formData.get('username')!.toString(),

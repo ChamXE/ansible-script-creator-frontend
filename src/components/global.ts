@@ -6,7 +6,6 @@ export function getURL(): string {
     return `http://${curURL}:8080`;
 }
 
-
 export async function getProject(username: string, source: CancelTokenSource): Promise<Project[] | null> {
     try {
         const response = await axios.get(`${getURL()}/project/${username}`, {
