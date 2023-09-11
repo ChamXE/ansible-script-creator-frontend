@@ -61,6 +61,9 @@ function Login({ setUserToken }: LoginProps) {
                 alert("Incorrect username/password!");
                 return;
             }
+            if(+token.username === -1) {
+                return;
+            }
             setUserToken(token);
         }
     };
