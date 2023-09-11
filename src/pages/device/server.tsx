@@ -8,9 +8,9 @@ import { useEffect, useState } from 'react';
 import { Server, Router, Switch, Host } from '~/device';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import CreateEditServer from '../createEdit/createEditServer';
+import CreateEditServer from '@/components/device/createEditServer';
 
-function ServerList() {
+function Server() {
     const apiRef = useGridApiRef();
     const { userToken } = useToken();
     const [device, setDevice] = useState<Server[] | null>(null);
@@ -143,4 +143,4 @@ function ServerList() {
     )
 }
 
-export default ServerList;
+export default Server;

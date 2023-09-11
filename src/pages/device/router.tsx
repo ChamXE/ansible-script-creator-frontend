@@ -9,9 +9,9 @@ import { Server, Router, Switch, Host, RouterConfiguration } from '~/device';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Project } from '@/models/project';
-import CreateEditRouter from '../createEdit/createEditRouter';
+import CreateEditRouter from '@/components/device/createEditRouter';
 
-function RouterList() {
+function Router() {
     const apiRef = useGridApiRef();
     const { userToken } = useToken();
     const [device, setDevice] = useState<Router[] | null>(null);
@@ -189,4 +189,4 @@ function RouterList() {
     )
 }
 
-export default RouterList;
+export default Router;

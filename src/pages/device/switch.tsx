@@ -9,21 +9,26 @@ import { Server, Router, Switch, Host } from '~/device';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Project } from '@/models/project';
-import CreateEditHost from '../createEdit/createEditHost';
+import CreateEditSwitch from '@/components/device/createEditSwitch';
 
-function HostList() {
+function Switch() {
     const apiRef = useGridApiRef();
     const { userToken } = useToken();
-    const [device, setDevice] = useState<Host[] | null>(null);
+    const [device, setDevice] = useState<Switch[] | null>(null);
     const [project, setProject] = useState<Project[] | null>(null);
     const [newData, setNewData] = useState(0);
     const [edit, setEdit] = useState<JSX.Element | null>(null);
 
     const column: GridColDef[] = [
-        { field: 'hostid', headerName: 'ID', flex: 1, type: 'string' },
-        { field: 'hostname', headerName: 'Name', flex: 1, type: 'string' },
-        { field: 'ip', headerName: 'IP Address', flex: 1, type: 'string' },
-        { field: 'subnet', headerName: 'Subnet Mask', flex: 1, type: 'string' },
+        { field: 'switchid', headerName: 'ID', flex: 1, type: 'string' },
+        { field: 'switchname', headerName: 'Name', flex: 1, type: 'string' },
+        {
+            field: 'stp', headerName: 'Enable STP', flex: 1, type: 'boolean', valueFormatter: (params: GridValueFormatterParams<boolean>) => {
+                if (params.value) return "✔️";
+                return "❌";
+            }
+        },
+        { field: 'controller', headerName: 'Controller', flex: 1, type: 'string' },
         {
             field: 'projectid', headerName: 'Project', flex: 1, type: 'string', valueFormatter: (params: GridValueFormatterParams<number>) => {
                 if (project) {
@@ -48,16 +53,16 @@ function HostList() {
         }
     ];
 
-    function isHost(item: Server[] | Router[] | Switch[] | Host[]): item is Host[] {
+    function isSwitch(item: Server[] | Router[] | Switch[] | Host[]): item is Switch[] {
         if (!item.length) return false;
-        return 'hostid' in item[0];
+        return 'switchid' in item[0];
     }
 
     const noRowsOverlay = () => (
         <Typography align='center' p='2rem'> No data! </Typography>
     );
 
-    const generateTable = (device: Host[]) => {
+    const generateTable = (device: Switch[]) => {
         return (
             <DataGrid
                 rows={device}
@@ -68,7 +73,7 @@ function HostList() {
                     },
                 }}
                 pageSizeOptions={[5, 10]}
-                getRowId={(row) => row.hostid}
+                getRowId={(row) => row.switchid}
                 slots={{
                     noRowsOverlay: noRowsOverlay
                 }}
@@ -86,9 +91,9 @@ function HostList() {
         if (apiRef.current.getSelectedRows().size) {
             const row = apiRef.current.getSelectedRows().values().next().value;
             console.log(row);
-            const sureDelete = window.confirm(`Are you sure you want to delete the host ${row.hostname}?`);
+            const sureDelete = window.confirm(`Are you sure you want to delete the switch ${row.switchname}?`);
             if (sureDelete) {
-                const result = await deleteDevice(row.hostid, 'host');
+                const result = await deleteDevice(row.switchid, 'switch');
                 if (result) setNewData((prev) => prev -= 1);
             }
         }
@@ -98,9 +103,9 @@ function HostList() {
     const handleEdit = async () => {
         const row = apiRef.current.getSelectedRows();
         if(row.size) {
-            const host: Host = row.values().next().value
+            const switchR: Switch = row.values().next().value
             setEdit(
-                <CreateEditHost host={host} project={project} resetEdit={resetEdit} newDataIncoming={newDataIncoming}/>
+                <CreateEditSwitch switchR={switchR} project={project} resetEdit={resetEdit} newDataIncoming={newDataIncoming}/>
             );
         }
     }
@@ -119,8 +124,8 @@ function HostList() {
         }
 
         const device = async () => {
-            const devices = await getDevice(userToken.username, 'host', source);
-            if (devices && isHost(devices)) setDevice(devices);
+            const devices = await getDevice(userToken.username, 'switch', source);
+            if (devices && isSwitch(devices)) setDevice(devices);
         };
 
         project();
@@ -137,8 +142,8 @@ function HostList() {
             sx={{ mt: '1.5rem', ml: '3rem', maxWidth: '95vw !important' }}
         >
             <Box component="span" mb="1rem" display="flex" alignItems="center">
-                <Typography fontSize='1.5rem'>Host</Typography>
-                <CreateEditHost newDataIncoming={newDataIncoming} project={project} />
+                <Typography fontSize='1.5rem'>Switch</Typography>
+                <CreateEditSwitch newDataIncoming={newDataIncoming} project={project} />
             </Box>
             {
                 device && generateTable(device)
@@ -148,4 +153,4 @@ function HostList() {
     )
 }
 
-export default HostList;
+export default Switch;
