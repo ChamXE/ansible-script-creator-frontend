@@ -1,4 +1,4 @@
-import { createDevice } from '@/components/global';
+import { createDevice } from '@/components/device/functions';
 import { Backdrop, Box, Button, Container, Fade, FormControl, FormControlLabel, FormLabel, MenuItem, Modal, Radio, RadioGroup, TextField, Typography } from '@mui/material';
 import { Switch } from '~/device';
 import * as React from 'react';

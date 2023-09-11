@@ -1,7 +1,7 @@
 import useToken from '@/components/app/useToken';
 import { Backdrop, Box, Button, Container, Divider, Fade, Modal, TextField, Typography } from '@mui/material';
 import { Server } from '~/device';
-import { createDevice } from '@/components/global';
+import { createDevice } from '@/components/device/functions';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 

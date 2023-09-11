@@ -1,5 +1,6 @@
 import useToken from '@/components/app/useToken';
-import { deleteDevice, getDevice, getProject } from '@/components/global';
+import { deleteDevice, getDevice } from '@/components/device/functions';
+import { getProject } from '@/components/global';
 import { Box, Container, IconButton, Typography } from '@mui/material';
 import axios from 'axios';
 import * as React from 'react';
