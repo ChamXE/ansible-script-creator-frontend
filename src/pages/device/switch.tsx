@@ -11,7 +11,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { Project } from '@/models/project';
 import CreateEditSwitch from '@/components/device/createEditSwitch';
 
-function Switch() {
+function SwitchList() {
     const apiRef = useGridApiRef();
     const { userToken } = useToken();
     const [device, setDevice] = useState<Switch[] | null>(null);
@@ -153,4 +153,4 @@ function Switch() {
     )
 }
 
-export default Switch;
+export default SwitchList;

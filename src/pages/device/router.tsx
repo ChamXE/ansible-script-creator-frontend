@@ -11,7 +11,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { Project } from '@/models/project';
 import CreateEditRouter from '@/components/device/createEditRouter';
 
-function Router() {
+function RouterList() {
     const apiRef = useGridApiRef();
     const { userToken } = useToken();
     const [device, setDevice] = useState<Router[] | null>(null);
@@ -189,4 +189,4 @@ function Router() {
     )
 }
 
-export default Router;
+export default RouterList;

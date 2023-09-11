@@ -10,7 +10,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CreateEditServer from '@/components/device/createEditServer';
 
-function Server() {
+function ServerList() {
     const apiRef = useGridApiRef();
     const { userToken } = useToken();
     const [device, setDevice] = useState<Server[] | null>(null);
@@ -143,4 +143,4 @@ function Server() {
     )
 }
 
-export default Server;
+export default ServerList;

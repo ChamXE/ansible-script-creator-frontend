@@ -11,7 +11,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { Project } from '@/models/project';
 import CreateEditHost from '@/components/device/createEditHost';
 
-function Host() {
+function HostList() {
     const apiRef = useGridApiRef();
     const { userToken } = useToken();
     const [device, setDevice] = useState<Host[] | null>(null);
@@ -148,4 +148,4 @@ function Host() {
     )
 }
 
-export default Host;
+export default HostList;

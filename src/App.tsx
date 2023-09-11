@@ -7,10 +7,10 @@ import Register from '@/pages/user/register';
 import Profile from '@/pages/user/profile';
 import NavBar from '@/components/app/navbar';
 import useToken from '@/components/app/useToken';
-import Switch from '@/pages/device/switch';
-import Server from '@/pages/device/server';
-import Host from '@/pages/device/host';
-import Router from '@/pages/device/router';
+import SwitchList from '@/pages/device/switch';
+import ServerList from '@/pages/device/server';
+import HostList from '@/pages/device/host';
+import RouterList from '@/pages/device/router';
 
 function App() {
 	// TODO => token n login mechanism
@@ -51,19 +51,19 @@ function App() {
 						/>
 						<Route
 							path="/server"
-							element={renderProtectedRoute(<Server />)}
+							element={renderProtectedRoute(<ServerList />)}
 						/>
 						<Route
 							path="/router"
-							element={renderProtectedRoute(<Router />)}
+							element={renderProtectedRoute(<RouterList />)}
 						/>
 						<Route
 							path="/switch"
-							element={renderProtectedRoute(<Switch />)}
+							element={renderProtectedRoute(<SwitchList />)}
 						/>
 						<Route
 							path="/host"
-							element={renderProtectedRoute(<Host />)}
+							element={renderProtectedRoute(<HostList />)}
 						/>
 					</Routes>
 				</div>
