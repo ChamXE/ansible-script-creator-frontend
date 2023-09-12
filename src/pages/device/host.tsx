@@ -23,8 +23,16 @@ function HostList() {
     const column: GridColDef[] = [
         { field: 'hostid', headerName: 'ID', flex: 1, type: 'string' },
         { field: 'hostname', headerName: 'Name', flex: 1, type: 'string' },
-        { field: 'ip', headerName: 'IP Address', flex: 1, type: 'string' },
-        { field: 'subnet', headerName: 'Subnet Mask', flex: 1, type: 'string' },
+        { 
+            field: 'ip', headerName: 'IP Address', flex: 1, type: 'string', valueFormatter: (params: GridValueFormatterParams<string>) => {
+                return params.value.length === 0 ? "N/A" : params.value;
+            } 
+        },
+        { 
+            field: 'subnet', headerName: 'Subnet Mask', flex: 1, type: 'string', valueFormatter: (params: GridValueFormatterParams<string>) => {
+                return params.value.length === 0 ? "N/A" : params.value;
+            } 
+        },
         {
             field: 'projectid', headerName: 'Project', flex: 1, type: 'string', valueFormatter: (params: GridValueFormatterParams<number>) => {
                 if (project) {
@@ -50,7 +58,7 @@ function HostList() {
     ];
 
     function isHost(item: Server[] | Router[] | Switch[] | Host[]): item is Host[] {
-        if (!item.length) return false;
+        if (!item.length) return true;
         return 'hostid' in item[0];
     }
 

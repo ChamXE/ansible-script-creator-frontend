@@ -1,12 +1,13 @@
 import { createDevice } from '@/components/device/functions';
 import { Backdrop, Box, Button, Container, Fade, FormControl, FormControlLabel, FormLabel, MenuItem, Modal, Radio, RadioGroup, TextField, Typography } from '@mui/material';
-import { Switch } from '~/device';
+import { Server, Switch } from '~/device';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { Project } from '@/models/project';
 
 interface CreateEditSwitchProps {
     switchR?: Switch;
+    server: Server[] | null;
     project: Project[] | null;
     resetEdit?: () => void;
     newDataIncoming: () => void;
@@ -24,10 +25,20 @@ const style = {
     p: 4,
 };
 
-function CreateEditSwitch({ switchR, project, resetEdit, newDataIncoming }: CreateEditSwitchProps) {
+function CreateEditSwitch({ server, switchR, project, resetEdit, newDataIncoming }: CreateEditSwitchProps) {
     const [open, setOpen] = useState(switchR ? true : false);
+    const [controller, setController] = useState<string>('');
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+
+    const setControllerValue = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const pId = event.target.value;
+        if(pId !== "none") {
+            const p = project?.filter(({ projectid }) => projectid === +pId);
+            const s = server?.filter(({ serverid }) => serverid === p![0].serverid);
+            setController(s![0].ip);
+        }
+    }
 
     const generateForm = () => (
         <Box component="form" sx={style} onSubmit={handleSubmit}>
@@ -62,6 +73,7 @@ function CreateEditSwitch({ switchR, project, resetEdit, newDataIncoming }: Crea
                 id="projectid"
                 select
                 defaultValue={switchR ? switchR.projectid : 'none'}
+                onChange={setControllerValue}
             >
                 <MenuItem key="none" value="none">Select Project</MenuItem>
                 {
@@ -90,7 +102,8 @@ function CreateEditSwitch({ switchR, project, resetEdit, newDataIncoming }: Crea
                 label="Controller IP"
                 type="text"
                 id="controller"
-                defaultValue={switchR ? switchR.controller : ''}
+                disabled
+                value={controller}
             />
             <Button
                 type="submit"
@@ -114,7 +127,7 @@ function CreateEditSwitch({ switchR, project, resetEdit, newDataIncoming }: Crea
             projectid: +projectId,
             switchname: formData.get('switchname')!.toString(),
             stp: formData.get('stp')!.toString() === "true" ? true : false,
-            controller: formData.get('controller')!.toString(),
+            controller: controller,
         }
 
         if (s) {

@@ -1,6 +1,6 @@
 import useToken from '@/components/app/useToken';
 import { deleteDevice, getDevice } from '@/components/device/functions';
-import { getProject } from '@/components/global';
+import { getProject, getServer } from '@/components/global';
 import { Box, Container, IconButton, Typography } from '@mui/material';
 import axios from 'axios';
 import * as React from 'react';
@@ -15,6 +15,7 @@ import CreateEditSwitch from '@/components/device/createEditSwitch';
 function SwitchList() {
     const apiRef = useGridApiRef();
     const { userToken } = useToken();
+    const [server, setServer] = useState<Server[] | null>(null);
     const [device, setDevice] = useState<Switch[] | null>(null);
     const [project, setProject] = useState<Project[] | null>(null);
     const [newData, setNewData] = useState(0);
@@ -55,7 +56,7 @@ function SwitchList() {
     ];
 
     function isSwitch(item: Server[] | Router[] | Switch[] | Host[]): item is Switch[] {
-        if (!item.length) return false;
+        if (!item.length) return true;
         return 'switchid' in item[0];
     }
 
@@ -109,7 +110,7 @@ function SwitchList() {
         if(row.size) {
             const switchR: Switch = row.values().next().value
             setEdit(
-                <CreateEditSwitch switchR={switchR} project={project} resetEdit={resetEdit} newDataIncoming={newDataIncoming}/>
+                <CreateEditSwitch server={server} switchR={switchR} project={project} resetEdit={resetEdit} newDataIncoming={newDataIncoming}/>
             );
         }
     }
@@ -132,6 +133,12 @@ function SwitchList() {
             if (devices && isSwitch(devices)) setDevice(devices);
         };
 
+        const server = async () => {
+            const server = await getServer(source);
+            if(server) setServer(server);
+        }
+
+        server();
         project();
         device();
 
@@ -147,7 +154,7 @@ function SwitchList() {
         >
             <Box component="span" mb="1rem" display="flex" alignItems="center">
                 <Typography fontSize='1.5rem'>Switch</Typography>
-                <CreateEditSwitch newDataIncoming={newDataIncoming} project={project} />
+                <CreateEditSwitch server={server} newDataIncoming={newDataIncoming} project={project} />
             </Box>
             {
                 device && generateTable(device)

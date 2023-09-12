@@ -25,8 +25,8 @@ export interface Host {
     hostid: number | null;
     hostname: string;
     projectid: number;
-    ip: string;
-    subnet: string;
+    ip: string | null;
+    subnet: string | null;
 }
 
 export interface RouterConfiguration {
@@ -57,4 +57,10 @@ export interface Route {
 export interface RouterUser extends User {
     privilege: number;
     secret: number;
+}
+
+export interface ProjectDevice {
+    router: Router[];
+    switch: Switch[];
+    host: Host[]
 }

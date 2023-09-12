@@ -91,7 +91,7 @@ function RouterList() {
     ];
 
     function isRouter(item: Server[] | Router[] | Switch[] | Host[]): item is Router[] {
-        if (!item.length) return false;
+        if (!item.length) return true;
         return 'routerid' in item[0];
     }
 

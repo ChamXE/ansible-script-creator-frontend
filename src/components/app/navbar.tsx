@@ -79,16 +79,16 @@ function NavBar({ setUserToken }: NavBarProps) {
         setAnchorElDevice(null);
         switch (event.currentTarget.textContent) {
             case "Server":
-                navigate('/server');
+                navigate('/device/server');
                 break;
             case "Router":
-                navigate('/router');
+                navigate('/device/router');
                 break
             case "Switch":
-                navigate('/switch');
+                navigate('/device/switch');
                 break;
             case "Host":
-                navigate('/host');
+                navigate('/device/host');
                 break
             default:
                 break;

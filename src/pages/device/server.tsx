@@ -50,7 +50,7 @@ function ServerList() {
     ];
 
     function isServer(item: Server[] | Router[] | Switch[] | Host[]): item is Server[] {
-        if (!item.length) return false;
+        if (!item.length) return true;
         return 'serverid' in item[0];
     }
 

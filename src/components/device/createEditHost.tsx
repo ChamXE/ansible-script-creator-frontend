@@ -73,7 +73,6 @@ function CreateEditHost({ host, project, resetEdit, newDataIncoming }: CreateEdi
             <TextField
                 margin="normal"
                 fullWidth
-                required
                 name="ip"
                 label="IP Address"
                 type="text"
@@ -83,7 +82,6 @@ function CreateEditHost({ host, project, resetEdit, newDataIncoming }: CreateEdi
             <TextField
                 margin="normal"
                 fullWidth
-                required
                 name="subnet"
                 label="Subnet Mask"
                 type="text"
@@ -96,10 +94,9 @@ function CreateEditHost({ host, project, resetEdit, newDataIncoming }: CreateEdi
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
             >
-                { host ? 'Save' : 'New Host' }
+                { host ? 'Save' : 'Create' }
             </Button>
         </Box>
-
     )
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
