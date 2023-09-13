@@ -130,7 +130,6 @@ function RouterList() {
     const handleDelete = async () => {
         if (apiRef.current.getSelectedRows().size) {
             const row = apiRef.current.getSelectedRows().values().next().value;
-            console.log(row);
             const sureDelete = window.confirm(`Are you sure you want to delete the router ${row.routername}?`);
             if (sureDelete) {
                 const result = await deleteDevice(row.routerid, 'router');

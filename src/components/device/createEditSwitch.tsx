@@ -29,7 +29,10 @@ function CreateEditSwitch({ server, switchR, project, resetEdit, newDataIncoming
     const [open, setOpen] = useState(switchR ? true : false);
     const [controller, setController] = useState<string>('');
     const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    const handleClose = () => {
+        setOpen(false);
+        if(resetEdit) resetEdit();
+    };
 
     const setControllerValue = (event: React.ChangeEvent<HTMLInputElement>) => {
         const pId = event.target.value;
@@ -141,14 +144,6 @@ function CreateEditSwitch({ server, switchR, project, resetEdit, newDataIncoming
             }
         }
     }
-
-    useEffect(() => {
-        if(!open) {
-            if(resetEdit) {
-                resetEdit();
-            }
-        }
-    }, [open]);
 
     return (
         <Container sx={{ ml: "0" }}>

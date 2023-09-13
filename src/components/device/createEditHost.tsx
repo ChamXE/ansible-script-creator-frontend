@@ -27,7 +27,10 @@ const style = {
 function CreateEditHost({ host, project, resetEdit, newDataIncoming }: CreateEditHostProps) {
     const [open, setOpen] = useState(host ? true : false);
     const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    const handleClose = () => {
+        setOpen(false);
+        if(resetEdit) resetEdit();
+    };
 
     const generateForm = () => (
         <Box component="form" sx={style} onSubmit={handleSubmit}>
@@ -121,14 +124,6 @@ function CreateEditHost({ host, project, resetEdit, newDataIncoming }: CreateEdi
             alert('Data entry failed! Please try again.');
         }
     }
-
-    useEffect(() => {
-        if(!open) {
-            if(resetEdit) {
-                resetEdit();
-            }
-        }
-    }, [open]);
 
     return (
         <Container sx={{ ml: "0" }}>

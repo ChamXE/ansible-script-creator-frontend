@@ -34,23 +34,18 @@ function CreateEditRouter({ router, project, resetEdit, newDataIncoming }: Creat
         routes: []
     });
     const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    const handleClose = () => {
+        setOpen(false);
+        setRouterConfig({
+            users: [],
+            routes: []
+        });
+        if(resetEdit) resetEdit();
+    };
 
     const handleUpdateRouterConfig = (rc: RouterConfiguration) => {
         setRouterConfig(rc);
     }
-
-    useEffect(() => {
-        if(!open) {
-            setRouterConfig({
-                users: [],
-                routes: []
-            })
-            if(resetEdit) {
-                resetEdit();
-            }
-        }
-    }, [open])
 
     const generateForm = () => (
         <Box component="form" sx={style} onSubmit={handleSubmit}>

@@ -25,7 +25,10 @@ const style = {
 function CreateEditServer({ server, resetEdit, newDataIncoming }: CreateEditServerProps) {
     const [open, setOpen] = useState<boolean>(server ? true: false);
     const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    const handleClose = () => {
+        setOpen(false);
+        if(resetEdit) resetEdit();
+    };
 
     const generateForm = () => (
         <Box component="form" sx={style} onSubmit={handleSubmit}>
@@ -116,14 +119,6 @@ function CreateEditServer({ server, resetEdit, newDataIncoming }: CreateEditServ
             alert('Data entry failed! Please try again.');
         }
     }
-
-    useEffect(() => {
-        if(!open) {
-            if(resetEdit) {
-                resetEdit();
-            }
-        }
-    }, [open]);
 
     return (
         <Container sx={{ ml: "0" }}>
