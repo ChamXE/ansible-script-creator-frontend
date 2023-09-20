@@ -27,10 +27,12 @@ const style = {
 
 function CreateEditSwitch({ server, switchR, project, resetEdit, newDataIncoming }: CreateEditSwitchProps) {
     const [open, setOpen] = useState(switchR ? true : false);
-    const [controller, setController] = useState<string>('');
+    const [controller, setController] = useState(switchR ? switchR.controller : '');
+
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
         setOpen(false);
+        setController('');
         if(resetEdit) resetEdit();
     };
 
@@ -40,7 +42,9 @@ function CreateEditSwitch({ server, switchR, project, resetEdit, newDataIncoming
             const p = project?.filter(({ projectid }) => projectid === +pId);
             const s = server?.filter(({ serverid }) => serverid === p![0].serverid);
             setController(s![0].ip);
+            return;
         }
+        setController('');
     }
 
     const generateForm = () => (
@@ -106,6 +110,7 @@ function CreateEditSwitch({ server, switchR, project, resetEdit, newDataIncoming
                 type="text"
                 id="controller"
                 disabled
+                defaultValue={controller}
                 value={controller}
             />
             <Button
