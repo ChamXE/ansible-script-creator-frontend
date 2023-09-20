@@ -39,6 +39,7 @@ function CreateEditNonRS({ connectionType, projectId, connection, projectDevices
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         let final: SwitchSwitch | SwitchHost;
+        let reverse: SwitchSwitch | undefined;
         if(connectionType === 'switchSwitch') {
             const switchIdSrc = formData.get('switchid_src')!.toString();
             if(switchIdSrc === 'none') return alert('Please select first switch!');
@@ -52,6 +53,12 @@ function CreateEditNonRS({ connectionType, projectId, connection, projectDevices
                 switchid_src: +switchIdSrc,
                 switchid_dst: +switchIdDst,
                 portname: srcSwitchName + dstSwitchName,
+            }
+            reverse = {
+                projectid: projectId,
+                switchid_src: +switchIdDst,
+                switchid_dst: +switchIdSrc,
+                portname: dstSwitchName + srcSwitchName,
             }
         }
         else {
@@ -68,14 +75,27 @@ function CreateEditNonRS({ connectionType, projectId, connection, projectDevices
                 portname: switchname + hostname,
             }
         }
-        let result: number;
+        let result: number, reverseResult: number | undefined;
         if(connection) {
             result = await updateConnection(connection, final, connectionType)
+            if(reverse) {
+                if(isSwitchSwitch(connection)) {
+                    const reverseConnection = {
+                        ...connection,
+                        switchid_src: connection.switchid_dst,
+                        switchid_dst: connection.switchid_src,
+                    }
+                    reverseResult = await updateConnection(reverseConnection, reverse, connectionType)
+                }
+            }
         }
         else {
             result = await createConnection(final, connectionType);
+            if(reverse) {
+                reverseResult = await createConnection(reverse, connectionType);
+            }
         }
-        if (result) {
+        if (result && (reverseResult === undefined || reverseResult)) {
             handleNewDataIncoming();
             handleClose();
         }
@@ -91,8 +111,6 @@ function CreateEditNonRS({ connectionType, projectId, connection, projectDevices
             setSelect(+selectedValue);
         }
         else setFirstFilled(false);
-
-        console.log(event.target.value);
     }
 
     const generateForm = () => (

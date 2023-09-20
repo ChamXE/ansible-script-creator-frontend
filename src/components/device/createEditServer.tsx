@@ -113,7 +113,7 @@ function CreateEditServer({ server, resetEdit, newDataIncoming }: CreateEditServ
         const result = await createDevice(s, 'server', server ? true : false);
         if (result) {
             newDataIncoming();
-            setOpen(false);
+            handleClose();
         }
         else {
             alert('Data entry failed! Please try again.');

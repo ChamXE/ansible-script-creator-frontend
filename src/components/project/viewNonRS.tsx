@@ -110,6 +110,7 @@ function ViewNonRS ({ connectionType, project, resetNonRS }: ViewNonRSProps) {
                 if(connectionType === 'switchSwitch') {
                     const connection: SwitchSwitch = row.values().next().value
                     result = await deleteConnection(connection.projectid, connection.switchid_src, connection.switchid_dst, connectionType);
+                    result = await deleteConnection(connection.projectid, connection.switchid_dst, connection.switchid_src, connectionType);
                 }
                 else {
                     const connection: SwitchHost = row.values().next().value
@@ -139,8 +140,8 @@ function ViewNonRS ({ connectionType, project, resetNonRS }: ViewNonRSProps) {
                 pageSizeOptions={[5, 10]}
                 getRowId={(row) => {
                     if(connectionType === 'switchSwitch')
-                        return row.projectid + row.switchid_src + row.switchid_dst
-                    return row.projectid + row.switchid + row.hostid
+                        return `${row.projectid}${row.switchid_src}${row.switchid_dst}`
+                    return `${row.projectid}${row.switchid}${row.hostid}`
                 }}
                 slots={{
                     noRowsOverlay: noRowsOverlay

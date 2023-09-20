@@ -126,7 +126,7 @@ function CreateEditRouter({ router, project, resetEdit, newDataIncoming }: Creat
         const result = await createDevice(r, 'router', router ? true : false);
         if (result) {
             newDataIncoming();
-            setOpen(false);
+            handleClose();
         }
         else {
             alert('Data entry failed! Please try again.');

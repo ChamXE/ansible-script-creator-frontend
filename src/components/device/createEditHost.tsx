@@ -118,7 +118,7 @@ function CreateEditHost({ host, project, resetEdit, newDataIncoming }: CreateEdi
         const result = await createDevice(h, 'host', host ? true : false);
         if (result) {
             newDataIncoming();
-            setOpen(false);
+            handleClose();
         }
         else {
             alert('Data entry failed! Please try again.');

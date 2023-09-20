@@ -137,7 +137,7 @@ function CreateEditSwitch({ server, switchR, project, resetEdit, newDataIncoming
             const result = await createDevice(s, 'switch', switchR ? true : false);
             if (result) {
                 newDataIncoming();
-                setOpen(false);
+                handleClose();
             }
             else {
                 alert('Data entry failed! Please try again.');

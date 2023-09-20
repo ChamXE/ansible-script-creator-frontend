@@ -120,7 +120,7 @@ function ViewRS ({ project, resetRS }: ViewRSProps) {
                     }
                 }}
                 pageSizeOptions={[5, 10]}
-                getRowId={(row) => row.projectid + row.routerid + row.switchid}
+                getRowId={(row) => `${row.projectid}${row.routerid}${row.switchid}`}
                 slots={{
                     noRowsOverlay: noRowsOverlay
                 }}
