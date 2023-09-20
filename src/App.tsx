@@ -11,6 +11,7 @@ import SwitchList from '@/pages/device/switch';
 import ServerList from '@/pages/device/server';
 import HostList from '@/pages/device/host';
 import RouterList from '@/pages/device/router';
+import ProjectList from '@/pages/project/project';
 
 function App() {
 	// TODO => token n login mechanism
@@ -28,7 +29,7 @@ function App() {
 	return (
 		<div style={{ minHeight: "100vh", minWidth: "100vw" }}>
 			<BrowserRouter>
-				<NavBar setUserToken={setUserToken} />
+				<NavBar setUserToken={setUserToken} isLoggedIn={isLoggedIn} />
 				<div className="client-content">
 					<Routes>
 						<Route
@@ -50,20 +51,24 @@ function App() {
 							element={renderProtectedRoute(<Profile />)}
 						/>
 						<Route
-							path="/server"
+							path="/device/server"
 							element={renderProtectedRoute(<ServerList />)}
 						/>
 						<Route
-							path="/router"
+							path="/device/router"
 							element={renderProtectedRoute(<RouterList />)}
 						/>
 						<Route
-							path="/switch"
+							path="/device/switch"
 							element={renderProtectedRoute(<SwitchList />)}
 						/>
 						<Route
-							path="/host"
+							path="/device/host"
 							element={renderProtectedRoute(<HostList />)}
+						/>
+						<Route
+							path="/project"
+							element={renderProtectedRoute(<ProjectList />)}
 						/>
 					</Routes>
 				</div>

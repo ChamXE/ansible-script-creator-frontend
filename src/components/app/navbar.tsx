@@ -21,9 +21,10 @@ const devices = ['Router', 'Switch', 'Host'];
 
 interface NavBarProps {
     setUserToken: (userToken: Token) => void;
+    isLoggedIn: boolean;
 }
 
-function NavBar({ setUserToken }: NavBarProps) {
+function NavBar({ setUserToken, isLoggedIn }: NavBarProps) {
     const navigate = useNavigate();
     const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
@@ -148,7 +149,7 @@ function NavBar({ setUserToken }: NavBarProps) {
                                 display: { xs: 'block', md: 'none' },
                             }}
                         >
-                            {pages.map((page) => (
+                            { isLoggedIn && pages.map((page) => (
                                 <MenuItem key={page} onClick={handleCloseNavMenu}>
                                     <Typography textAlign="center">{page}</Typography>
                                 </MenuItem>
@@ -170,7 +171,7 @@ function NavBar({ setUserToken }: NavBarProps) {
                             open={Boolean(anchorElDevice)}
                             onClose={handleCloseDeviceMenu}
                         >
-                            {devices.map((devices) => (
+                            { isLoggedIn && devices.map((devices) => (
                                 <MenuItem key={devices} onClick={handleCloseDeviceMenu}>
                                     <Typography textAlign="center">{devices}</Typography>
                                 </MenuItem>
