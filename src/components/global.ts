@@ -3,8 +3,9 @@ import { Project } from "@/models/project";
 import axios, { CancelTokenSource } from "axios";
 
 export function getURL(): string {
-    const curURL = window.location.hostname;
-    return `http://${curURL}/api`;
+    // const curURL = window.location.hostname;
+    // return `http://${curURL}/api`;
+    return `https://api.fyp-rennaux.me/api`;
 }
 
 export async function getProject(username: string, source: CancelTokenSource): Promise<Project[] | null> {
