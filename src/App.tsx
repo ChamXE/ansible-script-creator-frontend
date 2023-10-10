@@ -12,12 +12,15 @@ import ServerList from '@/pages/device/server';
 import HostList from '@/pages/device/host';
 import RouterList from '@/pages/device/router';
 import ProjectList from '@/pages/project/project';
+import axios from "axios";
+
+axios.defaults.withCredentials = true;
 
 function App() {
 	// TODO => token n login mechanism
 	const { userToken, setUserToken } = useToken();
 
-	const isLoggedIn = userToken.token ? true : false;
+	const isLoggedIn = !!userToken.username.length;
 
 	const renderProtectedRoute = (element: React.ReactElement) => {
 		return isLoggedIn ? element : <Navigate to="/login" replace={true} />;

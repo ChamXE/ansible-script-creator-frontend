@@ -23,17 +23,14 @@ async function loginUser(credentials: Credentials): Promise<Token> {
         if (!response.data.result) {
             console.error(response.data.message);
             return {
-                username: "-1",
-                token: "-1"
+                username: "-1"
             };
         }
         if (Object.keys(response.data.data).length) {
-            const userToken: Token = JSON.parse(JSON.stringify(response.data.data));
-            return userToken;
+            return JSON.parse(JSON.stringify(response.data.data));
         }
         return {
             username: "1",
-            token: "1"
         };
 
     } catch (e) {
@@ -41,7 +38,6 @@ async function loginUser(credentials: Credentials): Promise<Token> {
         console.error(e.message);
         return {
             username: "-1",
-            token: "-1"
         };
     }
 }

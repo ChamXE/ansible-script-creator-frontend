@@ -4,8 +4,7 @@ function useToken() {
     const getUserToken = () => {
         const tokenString = sessionStorage.getItem('userToken');
         const userToken: Token = tokenString ? JSON.parse(tokenString) : {
-            username: "",
-            token: ""
+            username: ""
         };
         return userToken;
     }
