@@ -96,22 +96,6 @@ function NavBar({ setUserToken, isLoggedIn }: NavBarProps) {
         }
     }
 
-    useEffect(() => {
-        const handleBeforeUnload = async () => {
-            setUserToken({
-                username: "",
-            });
-            sessionStorage.removeItem("userToken");
-            axios.post(`${getURL()}/user/logout`);
-        }
-
-        window.addEventListener('beforeunload', handleBeforeUnload);
-
-        return () => {
-            window.removeEventListener('beforeunload', handleBeforeUnload);
-        };
-    }, []);
-
     return (
         <AppBar position="static" >
             <Container maxWidth={false} sx={{ marginLeft: "0px", marginRight: "0px" }}>
