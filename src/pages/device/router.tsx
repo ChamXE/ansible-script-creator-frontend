@@ -28,7 +28,7 @@ function RouterList() {
             field: 'projectid', headerName: 'Project', flex: 0.5, type: 'string', valueFormatter: (params: GridValueFormatterParams<number>) => {
                 if (project) {
                     for (let i = 1; i < project.length; i++) {
-                        if (project[i].serverid === params.value) return project[i].projectname;
+                        if (project[i].projectid === params.value) return project[i].projectname;
                     }
                     return project[0].projectname;
                 }
