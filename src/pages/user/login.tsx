@@ -26,7 +26,7 @@ async function loginUser(credentials: Credentials): Promise<Token> {
                 username: "-1"
             };
         }
-        if (Object.keys(response.data.data).length) {
+        if (response.data.data) {
             return JSON.parse(JSON.stringify(response.data.data));
         }
         return {
