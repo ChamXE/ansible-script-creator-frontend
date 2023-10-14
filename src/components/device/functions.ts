@@ -5,7 +5,7 @@ import { Server, Router, Switch, Host } from "@/models/device";
 
 export async function getDevice(username: string, deviceType: string, source: CancelTokenSource): Promise<Server[] | Router[] | Switch[] | Host[] | null> {
     try {
-        const response = await axios.get(`${getURL()}/device/${deviceType}${deviceType === 'server' ? '' : `/${username}`}`, {
+        const response = await axios.get(`${getURL()}/device/${deviceType}All${deviceType === 'server' ? '' : `/${username}`}`, {
             cancelToken: source.token
         });
 
