@@ -2,9 +2,10 @@ import { createDevice } from '@/components/device/functions';
 import { Backdrop, Box, Button, Container, Fade, MenuItem, Modal, TextField, Typography } from '@mui/material';
 import { Router, RouterConfiguration } from '~/device';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
-import { Project } from '@/models/project';
-import CreateRouterConfig from './CreateRouterConfig';
+import { useState } from 'react';
+import { Project } from '~/project';
+import CreateRouterConfig from './createRouterConfig';
+import { Subnet } from '@/components/global';
 
 interface CreateEditRouterProps {
     router?: Router;
@@ -28,7 +29,7 @@ const style = {
 };
 
 function CreateEditRouter({ router, project, resetEdit, newDataIncoming }: CreateEditRouterProps) {
-    const [open, setOpen] = useState(router ? true : false);
+    const [open, setOpen] = useState(!!router);
     const [routerConfig, setRouterConfig] = useState<RouterConfiguration>({
         users: [],
         routes: []
@@ -44,7 +45,15 @@ function CreateEditRouter({ router, project, resetEdit, newDataIncoming }: Creat
     };
 
     const handleUpdateRouterConfig = (rc: RouterConfiguration) => {
-        setRouterConfig(rc);
+        setRouterConfig({
+            ...rc,
+            routes: rc.routes.map((route) => {
+                return {
+                    ...route,
+                    mask: Subnet[+route.mask.slice(1)]
+                }
+            })
+        });
     }
 
     const generateForm = () => (
@@ -95,7 +104,7 @@ function CreateEditRouter({ router, project, resetEdit, newDataIncoming }: Creat
                 label="Management IP Address"
                 type="text"
                 id="management"
-                disabled={router ? false : true}
+                disabled={!router}
                 defaultValue={router ? router.management : ''}
             />
             <CreateRouterConfig rc={router ? router.configuration : routerConfig} handleUpdateRouterConfig={handleUpdateRouterConfig} />
@@ -123,7 +132,7 @@ function CreateEditRouter({ router, project, resetEdit, newDataIncoming }: Creat
             configuration: routerConfig,
         }
 
-        const result = await createDevice(r, 'router', router ? true : false);
+        const result = await createDevice(r, 'router', !!router);
         if (result) {
             newDataIncoming();
             handleClose();

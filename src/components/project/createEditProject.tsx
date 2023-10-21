@@ -1,7 +1,7 @@
 import { Backdrop, Box, Button, Container, Fade, Modal, TextField, Typography } from '@mui/material';
 import { Server } from '~/device';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Project } from '@/models/project';
 import useToken from '../app/useToken';
 import axios from 'axios';
@@ -28,7 +28,7 @@ const style = {
 
 function CreateEditProject({ project, server, resetEdit, newDataIncoming }: CreateEditProjectProps) {
     const { userToken } = useToken();
-    const [open, setOpen] = useState(project ? true : false);
+    const [open, setOpen] = useState(!!project);
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
         setOpen(false);
@@ -75,11 +75,12 @@ function CreateEditProject({ project, server, resetEdit, newDataIncoming }: Crea
         const p: Project = {
             projectid: project ? project.projectid : null,
             projectname: formData.get('projectname')!.toString(),
-            username: userToken.username,
+            username: userToken!.username,
             serverid: server![0].serverid!,
+            generated: project ? project.generated : false // formData.get('generated')!.toString(),
         }
 
-        const result = await createProject(p, project ? true : false);
+        const result = await createProject(p, !!project);
         if (result) {
             newDataIncoming();
             handleClose();
@@ -92,7 +93,7 @@ function CreateEditProject({ project, server, resetEdit, newDataIncoming }: Crea
     async function createProject(project: Project, isEdit: boolean): Promise<number> {
         try {
             const response = await axios.post(`${getURL()}/project/`, project);
-            
+
             if (!response.data.result) {
                 console.error(response.data.message);
                 return 0;
@@ -109,7 +110,7 @@ function CreateEditProject({ project, server, resetEdit, newDataIncoming }: Crea
     return (
         <Container sx={{ ml: "0" }}>
             {
-                project ? 
+                project ?
                     <></>
                     :
                     <Button

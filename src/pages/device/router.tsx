@@ -18,7 +18,7 @@ function RouterList() {
     const [device, setDevice] = useState<Router[] | null>(null);
     const [project, setProject] = useState<Project[] | null>(null);
     const [newData, setNewData] = useState(0);
-    const [edit, setEdit] = useState<JSX.Element | null>(null);
+    const [edit, setEdit] = useState<React.ReactElement | null>(null);
 
     const column: GridColDef[] = [
         { field: 'routerid', headerName: 'ID', flex: 0.5, type: 'string' },
@@ -40,10 +40,9 @@ function RouterList() {
                 return users.length ? (
                     <Box width='-webkit-fill-available'>
                         {
-                            users.map(({ username, password, secret, privilege }, index) => (
+                            users.map(({ username, password, privilege }, index) => (
                                 <Box key={username}>
                                     <Typography>Username: {username}</Typography>
-                                    <Typography>Secret: {secret}</Typography>
                                     <Typography>Password: {password}</Typography>
                                     <Typography>Privilege: {privilege}</Typography>
                                     {index !== users.length - 1 ? <Divider /> : <></>}
@@ -124,7 +123,7 @@ function RouterList() {
     }
 
     const newDataIncoming = () => {
-        setNewData((prev) => prev += 1);
+        setNewData((prev) => prev + 1);
     }
 
     const handleDelete = async () => {
@@ -133,7 +132,7 @@ function RouterList() {
             const sureDelete = window.confirm(`Are you sure you want to delete the router ${row.routername}?`);
             if (sureDelete) {
                 const result = await deleteDevice(row.routerid, 'router');
-                if (result) setNewData((prev) => prev -= 1);
+                if (result) setNewData((prev) => prev - 1);
             }
         }
         else alert("Please select row!");
@@ -158,12 +157,12 @@ function RouterList() {
         const source = CancelToken.source();
 
         const project = async () => {
-            const devices = await getProject(userToken.username, source);
+            const devices = await getProject(userToken!.username, source);
             if (devices) setProject(devices);
         }
 
         const device = async () => {
-            const devices = await getDevice(userToken.username, 'router', source);
+            const devices = await getDevice(userToken!.username, 'router', source);
             if (devices && isRouter(devices)) setDevice(devices);
         };
 

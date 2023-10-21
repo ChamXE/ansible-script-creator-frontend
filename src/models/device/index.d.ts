@@ -17,7 +17,6 @@ export interface Switch {
     switchid: number | null;
     switchname: string;
     projectid: number;
-    stp: boolean;
     controller: string;
 }
 
@@ -56,7 +55,6 @@ export interface Route {
 
 export interface RouterUser extends User {
     privilege: number;
-    secret: number;
 }
 
 export interface ProjectDevice {

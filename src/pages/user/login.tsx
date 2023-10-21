@@ -12,33 +12,28 @@ import Container from '@mui/material/Container';
 import axios from 'axios';
 import { Credentials } from '@/models/user';
 import { getURL } from '@/components/global';
+import {isNumber} from "@mui/x-data-grid/internals";
 
 interface LoginProps {
     setUserToken: (userToken: Token) => void;
 }
 
-async function loginUser(credentials: Credentials): Promise<Token> {
+async function loginUser(credentials: Credentials): Promise<Token | number> {
     try {
         const response = await axios.post(`${getURL()}/user/login`, credentials);
         if (!response.data.result) {
             console.error(response.data.message);
-            return {
-                username: "-1"
-            };
+            return -1;
         }
         if (response.data.data) {
             return JSON.parse(JSON.stringify(response.data.data));
         }
-        return {
-            username: "1",
-        };
+        return 1;
 
     } catch (e) {
         alert('Login failed! Please try again!');
         console.error(e.message);
-        return {
-            username: "-1",
-        };
+        return -1;
     }
 }
 
@@ -53,14 +48,14 @@ function Login({ setUserToken }: LoginProps) {
                 username,
                 password
             });
-            if (+token.username === 1) {
+            if (+token === 1) {
                 alert("Incorrect username/password!");
                 return;
             }
-            if(+token.username === -1) {
+            if(+token === -1) {
                 return;
             }
-            setUserToken(token);
+            if(!isNumber(token)) setUserToken(token);
         }
     };
 

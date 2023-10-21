@@ -1,19 +1,29 @@
 import { useState } from 'react';
+import dayjs from 'dayjs';
 
 function useToken() {
+
     const getUserToken = () => {
         const tokenString = localStorage.getItem('userToken');
-        const userToken: Token = tokenString ? JSON.parse(tokenString) : {
-            username: ""
-        };
-        return userToken;
+        const ut: Token = tokenString ? JSON.parse(tokenString) : null;
+        if(ut) {
+            if(dayjs(ut.expire) < dayjs()) {
+                localStorage.removeItem('userToken');
+                window.location.replace('/login');
+                return null;
+            }
+        }
+        return ut;
     }
 
-    const [userToken, setUserToken] = useState<Token>(getUserToken());
+    const [userToken, setUserToken] = useState<Token | null>(getUserToken());
 
-    const saveToken = (userToken: Token) => {
-        localStorage.setItem('userToken', JSON.stringify(userToken));
-        setUserToken(userToken);
+    const saveToken = (ut: Token | null) => {
+        if(!ut) {
+            if(userToken) localStorage.removeItem('userToken');
+        }
+        if(ut) localStorage.setItem('userToken', JSON.stringify(ut));
+        setUserToken(ut);
     }
 
     return {

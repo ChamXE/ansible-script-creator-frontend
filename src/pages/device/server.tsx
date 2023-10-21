@@ -15,7 +15,7 @@ function ServerList() {
     const { userToken } = useToken();
     const [device, setDevice] = useState<Server[] | null>(null);
     const [newData, setNewData] = useState(0);
-    const [edit, setEdit] = useState<JSX.Element | null>(null);
+    const [edit, setEdit] = useState<React.ReactElement | null>(null);
 
     const column: GridColDef[] = [
         { field: 'serverid', headerName: 'ID', flex: 0.5, type: 'string' },
@@ -83,7 +83,7 @@ function ServerList() {
     }
 
     const newDataIncoming = () => {
-        setNewData((prev) => prev += 1);
+        setNewData((prev) => prev + 1);
     }
 
     const handleDelete = async () => {
@@ -93,7 +93,7 @@ function ServerList() {
             const sureDelete = window.confirm(`Are you sure you want to delete the server ${row.servername}?`);
             if (sureDelete) {
                 const result = await deleteDevice(row.serverid, 'server');
-                if (result) setNewData((prev) => prev -= 1);
+                if (result) setNewData((prev) => prev - 1);
             }
         }
         else alert("Please select row!");
@@ -118,7 +118,7 @@ function ServerList() {
         const source = CancelToken.source();
 
         const device = async () => {
-            const devices = await getDevice(userToken.username, 'server', source);
+            const devices = await getDevice(userToken!.username, 'server', source);
             if (devices && isServer(devices)) setDevice(devices);
         };
 

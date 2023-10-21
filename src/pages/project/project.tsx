@@ -18,10 +18,10 @@ function ProjectList () {
     const [project, setProject] = useState<Project[] | null>(null);
     const [server, setServer] = useState<Server[] | null>(null);
     const [newData, setNewData] = useState(0);
-    const [edit, setEdit] = useState<JSX.Element | null>(null);
-    const [routerSwitch, setRouterSwitch] = useState<JSX.Element | null>(null);
-    const [switchSwitch, setSwitchSwitch] = useState<JSX.Element | null>(null);
-    const [switchHost, setSwitchHost] = useState<JSX.Element | null>(null);
+    const [edit, setEdit] = useState<React.ReactElement | null>(null);
+    const [routerSwitch, setRouterSwitch] = useState<React.ReactElement | null>(null);
+    const [switchSwitch, setSwitchSwitch] = useState<React.ReactElement | null>(null);
+    const [switchHost, setSwitchHost] = useState<React.ReactElement | null>(null);
     
     const column: GridColDef[] = [
         { field: 'projectid', headerName: 'Project ID', type: 'string', flex: 1},
@@ -74,7 +74,7 @@ function ProjectList () {
     ];
 
     const handleNewDataIncoming = () => {
-        setNewData((prev) => prev += 1);
+        setNewData((prev) => prev + 1);
     }
 
     const resetEdit = () => {
@@ -130,7 +130,7 @@ function ProjectList () {
             const sureDelete = window.confirm(`Are you sure you want to delete the project ${row.projectname}?`);
             if (sureDelete) {
                 const result = await deleteProject(row.projectid);
-                if (result) setNewData((prev) => prev -= 1);
+                if (result) setNewData((prev) => prev - 1);
             }
         }
         else alert("Please select row!");
@@ -179,7 +179,7 @@ function ProjectList () {
         const source = CancelToken.source();
 
         const loadProject = async () => {
-            const project: Project[] | null = await getProject(userToken.username, source)
+            const project: Project[] | null = await getProject(userToken!.username, source)
             setProject(project);
         }
 

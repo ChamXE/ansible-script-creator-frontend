@@ -19,17 +19,11 @@ function SwitchList() {
     const [device, setDevice] = useState<Switch[] | null>(null);
     const [project, setProject] = useState<Project[] | null>(null);
     const [newData, setNewData] = useState(0);
-    const [edit, setEdit] = useState<JSX.Element | null>(null);
+    const [edit, setEdit] = useState<React.ReactElement | null>(null);
 
     const column: GridColDef[] = [
         { field: 'switchid', headerName: 'ID', flex: 1, type: 'string' },
         { field: 'switchname', headerName: 'Name', flex: 1, type: 'string' },
-        {
-            field: 'stp', headerName: 'Enable STP', flex: 1, type: 'boolean', valueFormatter: (params: GridValueFormatterParams<boolean>) => {
-                if (params.value) return "✔️";
-                return "❌";
-            }
-        },
         { field: 'controller', headerName: 'Controller', flex: 1, type: 'string' },
         {
             field: 'projectid', headerName: 'Project', flex: 1, type: 'string', valueFormatter: (params: GridValueFormatterParams<number>) => {
@@ -89,7 +83,7 @@ function SwitchList() {
     }
 
     const newDataIncoming = () => {
-        setNewData((prev) => prev += 1);
+        setNewData((prev) => prev + 1);
     }
 
     const handleDelete = async () => {
@@ -99,7 +93,7 @@ function SwitchList() {
             const sureDelete = window.confirm(`Are you sure you want to delete the switch ${row.switchname}?`);
             if (sureDelete) {
                 const result = await deleteDevice(row.switchid, 'switch');
-                if (result) setNewData((prev) => prev -= 1);
+                if (result) setNewData((prev) => prev - 1);
             }
         }
         else alert("Please select row!");
@@ -124,12 +118,12 @@ function SwitchList() {
         const source = CancelToken.source();
 
         const project = async () => {
-            const devices = await getProject(userToken.username, source);
+            const devices = await getProject(userToken!.username, source);
             if (devices) setProject(devices);
         }
 
         const device = async () => {
-            const devices = await getDevice(userToken.username, 'switch', source);
+            const devices = await getDevice(userToken!.username, 'switch', source);
             if (devices && isSwitch(devices)) setDevice(devices);
         };
 

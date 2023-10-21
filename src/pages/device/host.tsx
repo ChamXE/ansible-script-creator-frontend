@@ -18,7 +18,7 @@ function HostList() {
     const [device, setDevice] = useState<Host[] | null>(null);
     const [project, setProject] = useState<Project[] | null>(null);
     const [newData, setNewData] = useState(0);
-    const [edit, setEdit] = useState<JSX.Element | null>(null);
+    const [edit, setEdit] = useState<React.ReactElement | null>(null);
 
     const column: GridColDef[] = [
         { field: 'hostid', headerName: 'ID', flex: 1, type: 'string' },
@@ -91,7 +91,7 @@ function HostList() {
     }
 
     const newDataIncoming = () => {
-        setNewData((prev) => prev += 1);
+        setNewData((prev) => prev + 1);
     }
 
     const handleDelete = async () => {
@@ -101,7 +101,7 @@ function HostList() {
             const sureDelete = window.confirm(`Are you sure you want to delete the host ${row.hostname}?`);
             if (sureDelete) {
                 const result = await deleteDevice(row.hostid, 'host');
-                if (result) setNewData((prev) => prev -= 1);
+                if (result) setNewData((prev) => prev - 1);
             }
         }
         else alert("Please select row!");
@@ -126,12 +126,12 @@ function HostList() {
         const source = CancelToken.source();
 
         const project = async () => {
-            const devices = await getProject(userToken.username, source);
+            const devices = await getProject(userToken!.username, source);
             if (devices) setProject(devices);
         }
 
         const device = async () => {
-            const devices = await getDevice(userToken.username, 'host', source);
+            const devices = await getDevice(userToken!.username, 'host', source);
             if (devices && isHost(devices)) setDevice(devices);
         };
 

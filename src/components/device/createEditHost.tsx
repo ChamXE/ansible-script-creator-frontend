@@ -2,8 +2,9 @@ import { createDevice } from '@/components/device/functions';
 import { Backdrop, Box, Button, Container, Fade, MenuItem, Modal, TextField, Typography } from '@mui/material';
 import { Host } from '~/device';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Project } from '@/models/project';
+import { Subnet } from "@/components/global";
 
 interface CreateEditHostProps {
     host?: Host;
@@ -25,7 +26,7 @@ const style = {
 };
 
 function CreateEditHost({ host, project, resetEdit, newDataIncoming }: CreateEditHostProps) {
-    const [open, setOpen] = useState(host ? true : false);
+    const [open, setOpen] = useState(!!host);
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
         setOpen(false);
@@ -89,8 +90,16 @@ function CreateEditHost({ host, project, resetEdit, newDataIncoming }: CreateEdi
                 label="Subnet Mask"
                 type="text"
                 id="subnet"
+                select
                 defaultValue={host ? host.subnet : ''}
-            />
+            >
+                <MenuItem key="none" value="none">Select Subnet</MenuItem>
+                {
+                    Object.keys(Subnet).map((s) => {
+                        return <MenuItem key={s} value={Subnet[+s]}>/{s}</MenuItem>
+                    })
+                }
+            </TextField>
             <Button
                 type="submit"
                 fullWidth
@@ -106,16 +115,18 @@ function CreateEditHost({ host, project, resetEdit, newDataIncoming }: CreateEdi
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         const projectId = formData.get('projectid')!.toString();
+        const subnet = formData.get('subnet')!.toString();
         if (projectId === 'none') return alert('Please select the project this router belongs to!');
+        if(subnet === 'none') return alert('Please select subnet!');
         const h: Host = {
             hostid: host ? host.hostid : null,
             projectid: +projectId,
             hostname: formData.get('hostname')!.toString(),
             ip: formData.get('ip')!.toString(),
-            subnet: formData.get('subnet')!.toString(),
+            subnet: subnet,
         }
 
-        const result = await createDevice(h, 'host', host ? true : false);
+        const result = await createDevice(h, 'host', !!host);
         if (result) {
             newDataIncoming();
             handleClose();

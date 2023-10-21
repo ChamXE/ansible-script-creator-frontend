@@ -1,13 +1,12 @@
 import { createDevice } from '@/components/device/functions';
-import { Backdrop, Box, Button, Container, Fade, FormControl, FormControlLabel, FormLabel, MenuItem, Modal, Radio, RadioGroup, TextField, Typography } from '@mui/material';
-import { Server, Switch } from '~/device';
+import { Backdrop, Box, Button, Container, Fade, MenuItem, Modal, TextField, Typography } from '@mui/material';
+import { Switch } from '~/device';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Project } from '@/models/project';
 
 interface CreateEditSwitchProps {
     switchR?: Switch;
-    server: Server[] | null;
     project: Project[] | null;
     resetEdit?: () => void;
     newDataIncoming: () => void;
@@ -25,9 +24,9 @@ const style = {
     p: 4,
 };
 
-function CreateEditSwitch({ server, switchR, project, resetEdit, newDataIncoming }: CreateEditSwitchProps) {
-    const [open, setOpen] = useState(switchR ? true : false);
-    const [controller, setController] = useState(switchR ? switchR.controller : '');
+function CreateEditSwitch({ switchR, project, resetEdit, newDataIncoming }: CreateEditSwitchProps) {
+    const [open, setOpen] = useState(!!switchR);
+    const [controller, setController] = useState('10.100.10.30');
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
@@ -35,17 +34,6 @@ function CreateEditSwitch({ server, switchR, project, resetEdit, newDataIncoming
         setController('');
         if(resetEdit) resetEdit();
     };
-
-    const setControllerValue = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const pId = event.target.value;
-        if(pId !== "none") {
-            const p = project?.filter(({ projectid }) => projectid === +pId);
-            const s = server?.filter(({ serverid }) => serverid === p![0].serverid);
-            setController(s![0].ip);
-            return;
-        }
-        setController('');
-    }
 
     const generateForm = () => (
         <Box component="form" sx={style} onSubmit={handleSubmit}>
@@ -80,7 +68,6 @@ function CreateEditSwitch({ server, switchR, project, resetEdit, newDataIncoming
                 id="projectid"
                 select
                 defaultValue={switchR ? switchR.projectid : 'none'}
-                onChange={setControllerValue}
             >
                 <MenuItem key="none" value="none">Select Project</MenuItem>
                 {
@@ -89,18 +76,6 @@ function CreateEditSwitch({ server, switchR, project, resetEdit, newDataIncoming
                     })
                 }
             </TextField>
-            <FormControl required>
-                <FormLabel id="stp">Enable STP</FormLabel>
-                <RadioGroup
-                    row
-                    aria-labelledby="demo-row-radio-buttons-group-label"
-                    name="stp"
-                    defaultValue={switchR ? switchR.stp : 'true'}
-                >
-                    <FormControlLabel value="true" control={<Radio />} label="True" />
-                    <FormControlLabel value="false" control={<Radio />} label="False" />
-                </RadioGroup>
-            </FormControl>
             <TextField
                 margin="normal"
                 fullWidth
@@ -134,12 +109,11 @@ function CreateEditSwitch({ server, switchR, project, resetEdit, newDataIncoming
             switchid: switchR ? switchR.switchid : null,
             projectid: +projectId,
             switchname: formData.get('switchname')!.toString(),
-            stp: formData.get('stp')!.toString() === "true" ? true : false,
             controller: controller,
         }
 
         if (s) {
-            const result = await createDevice(s, 'switch', switchR ? true : false);
+            const result = await createDevice(s, 'switch', !!switchR);
             if (result) {
                 newDataIncoming();
                 handleClose();

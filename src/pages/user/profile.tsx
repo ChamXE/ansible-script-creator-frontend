@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {useEffect, useState} from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -11,10 +12,9 @@ import Backdrop from '@mui/material/Backdrop';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import axios from 'axios';
-import { useState, useEffect } from 'react';
-import { Credentials, User } from '@/models/user';
+import {Credentials, User} from '@/models/user';
 import useToken from '@/components/app/useToken';
-import { getURL } from '@/components/global';
+import {getURL} from '@/components/global';
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -36,8 +36,7 @@ async function getUser(username: string): Promise<User | null> {
             return null;
         }
         if (Object.keys(response.data.data).length) {
-            const user: User = JSON.parse(JSON.stringify(response.data.data));
-            return user;
+            return JSON.parse(JSON.stringify(response.data.data));
         }
         return null;
 
@@ -108,15 +107,15 @@ function ChangePasswordModal({ userToken }: ChangePasswordModalProps) {
         }));
         switch (event.target.name) {
             case "password":
-                setOldPasswordFilled(event.target.value ? true : false);
+                setOldPasswordFilled(!!event.target.value);
                 if (event.target.value && oldPasswordErrored) setOldPasswordErrored(false);
                 break;
             case "newPassword":
-                setConfirmPasswordDisabled(event.target.value ? false : true);
-                checkConfirmPassword("newPassword", event.target.value);
+                setConfirmPasswordDisabled(!event.target.value);
+                await checkConfirmPassword("newPassword", event.target.value);
                 break;
             case "confirmNewPassword":
-                checkConfirmPassword("confirmNewPassword", event.target.value);
+                await checkConfirmPassword("confirmNewPassword", event.target.value);
                 break;
             default:
                 break;
@@ -249,7 +248,7 @@ function Profile() {
 
     useEffect(() => {
         const user = async () => {
-            const userData = await getUser(userToken.username);
+            const userData = await getUser(userToken!.username);
             if (userData) setUser(userData);
         };
 
@@ -298,7 +297,7 @@ function Profile() {
                         }}
                         value={user.email}
                     />
-                    <ChangePasswordModal userToken={userToken} />
+                    <ChangePasswordModal userToken={userToken!} />
                 </Box>
             </Box>
         </Container>

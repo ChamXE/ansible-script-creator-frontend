@@ -11,7 +11,7 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { getURL } from "@/components/global";
 import axios from "axios";
 
@@ -20,7 +20,7 @@ const settings = ['Account', 'Dashboard', 'Logout'];
 const devices = ['Router', 'Switch', 'Host'];
 
 interface NavBarProps {
-    setUserToken: (userToken: Token) => void;
+    setUserToken: (userToken: Token | null) => void;
     isLoggedIn: boolean;
 }
 
@@ -30,9 +30,6 @@ function NavBar({ setUserToken, isLoggedIn }: NavBarProps) {
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
     const [anchorElDevice, setAnchorElDevice] = useState<null | HTMLElement>(null);
 
-    const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorElNav(event.currentTarget);
-    };
     const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElUser(event.currentTarget);
     };
@@ -65,10 +62,7 @@ function NavBar({ setUserToken, isLoggedIn }: NavBarProps) {
                 navigate('/dashboard');
                 break
             case "Logout":
-                setUserToken({
-                    username: "",
-                });
-                sessionStorage.removeItem("userToken");
+                setUserToken(null);
                 axios.post(`${getURL()}/user/logout`);
                 break;
             default:

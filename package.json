@@ -34,7 +34,7 @@
     "test": "craco test",
     "eject": "craco eject",
     "predeploy": "npm run build && type 404.html > ./build/404.html",
-    "deploy": "echo fyp-rennaux.me > ./build/CNAME && gh-pages -d build\""
+    "deploy": "echo fyp-rennaux.me > ./build/CNAME && gh-pages -d ./build"
   },
   "eslintConfig": {
     "extends": [

@@ -3,7 +3,8 @@ import { ProjectDevice } from "@/models/device";
 import { RouterSwitch } from "@/models/project";
 import { Backdrop, Box, Button, Fade, MenuItem, Modal, TextField, Typography } from '@mui/material';
 import { createConnection, updateConnection } from './functions';
-import InputMask from "react-input-mask";
+import {Subnet} from "@/components/global";
+import * as React from "react";
 
 interface CreateEditRSProps {
     projectId: number;
@@ -27,15 +28,12 @@ const style = {
 
 function CreateEditRS({ projectId, connection, projectDevices, resetEdit, handleNewDataIncoming }: CreateEditRSProps) {
     const connectionType = 'routerSwitch';
-    const [open, setOpen] = useState(connection ? true : false);
+    const [open, setOpen] = useState(!!connection);
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
         setOpen(false);
         if(resetEdit) resetEdit();
     };
-
-    const firstLetter = /(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)/
-    const ipMask = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -45,6 +43,8 @@ function CreateEditRS({ projectId, connection, projectDevices, resetEdit, handle
         const { routername } = projectDevices!.router.filter(({ routerid }) => routerid === +routerId)[0];
         const switchId = formData.get('switchid')!.toString();
         if(switchId === 'none') return alert('Please select switch!');
+        const subnet = formData.get('subnet')!.toString();
+        if(subnet === 'none') return alert('Please select subnet!');
         const { switchname } = projectDevices!.switch.filter(({ switchid }) => switchid === +switchId)[0];
         const routerSwitch: RouterSwitch = {
             projectid: projectId,
@@ -52,7 +52,7 @@ function CreateEditRS({ projectId, connection, projectDevices, resetEdit, handle
             switchid: +switchId,
             portname: routername + switchname,
             ip: formData.get('ip')!.toString(),
-            subnet: formData.get('subnet')!.toString(),
+            subnet: subnet,
         }
         let result: number;
         if(connection) {
@@ -128,7 +128,15 @@ function CreateEditRS({ projectId, connection, projectDevices, resetEdit, handle
                 type="text"
                 id="subnet"
                 defaultValue={connection ? connection.subnet : ''}
-            />
+                select
+            >
+                <MenuItem key="none" value="none">Select Subnet</MenuItem>
+                {
+                    Object.keys(Subnet).map((s) => {
+                        return <MenuItem key={s} value={Subnet[+s]}>/{s}</MenuItem>
+                    })
+                }
+            </TextField>
             <Button
                 type="submit"
                 fullWidth

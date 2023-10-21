@@ -13,14 +13,22 @@ import HostList from '@/pages/device/host';
 import RouterList from '@/pages/device/router';
 import ProjectList from '@/pages/project/project';
 import axios from "axios";
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import duration from 'dayjs/plugin/duration';
 
 axios.defaults.withCredentials = true;
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(duration);
+dayjs.tz.setDefault('Asia/Kuala_Lumpur');
 
 function App() {
 	// TODO => token n login mechanism
 	const { userToken, setUserToken } = useToken();
 
-	const isLoggedIn = !!userToken.username.length;
+	const isLoggedIn = !!userToken;
 
 	const renderProtectedRoute = (element: React.ReactElement) => {
 		return isLoggedIn ? element : <Navigate to="/login" replace={true} />;

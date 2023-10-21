@@ -11,7 +11,7 @@ function Dashboard() {
             display: "flex",
             justifyContent: "center"
         }}>
-            <Typography paragraph>Welcome back, {userToken.username}.</Typography>
+            <Typography paragraph>Welcome back, {userToken!.username}.</Typography>
         </Box>
     )
 }

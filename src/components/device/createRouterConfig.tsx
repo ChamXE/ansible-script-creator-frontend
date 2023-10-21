@@ -37,14 +37,6 @@ function CreateRouterConfig({ rc, handleUpdateRouterConfig }: CreateRouterConfig
             valueOptions: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
         },
         {
-            field: 'secret',
-            headerName: 'Secret',
-            flex: 1,
-            type: 'singleSelect',
-            editable: true,
-            valueOptions: [5, 6, 8, 9],
-        },
-        {
             field: 'null', headerName: 'Action', flex: 1, editable: false, renderCell: () => (
                 <IconButton sx={{ ml: "1rem" }} onClick={handleDeleteUser}>
                     <DeleteIcon />
@@ -55,15 +47,22 @@ function CreateRouterConfig({ rc, handleUpdateRouterConfig }: CreateRouterConfig
 
     const routeColumn: GridColDef[] = [
         { field: 'prefix', headerName: 'Prefix', flex: 1, type: 'string', editable: true },
-        { field: 'mask', headerName: 'Subnet', flex: 1, type: 'string', editable: true },
         {
-            field: 'exitInterface',
-            headerName: 'Exit Interface',
+            field: 'mask',
+            headerName: 'Subnet',
             flex: 1,
             type: 'singleSelect',
             editable: true,
-            valueOptions: ['none'],
+            valueOptions: [...new Array(23).keys()].map((i) => `/${i + 8}`)
         },
+        // {
+        //     field: 'exitInterface',
+        //     headerName: 'Exit Interface',
+        //     flex: 1,
+        //     type: 'singleSelect',
+        //     editable: true,
+        //     valueOptions: ['none'],
+        // },
         {
             field: 'exitGateway',
             headerName: 'Exit Gateway',
@@ -96,7 +95,6 @@ function CreateRouterConfig({ rc, handleUpdateRouterConfig }: CreateRouterConfig
                         username: '',
                         password: '',
                         privilege: 15,
-                        secret: 9,
                     },
                     ...prev.users,
                 ];
@@ -106,7 +104,6 @@ function CreateRouterConfig({ rc, handleUpdateRouterConfig }: CreateRouterConfig
                     username: '',
                     password: '',
                     privilege: 15,
-                    secret: 9,
                 }];
             }
             return {
@@ -154,7 +151,7 @@ function CreateRouterConfig({ rc, handleUpdateRouterConfig }: CreateRouterConfig
                         mask: '',
                         exitGateway: undefined,
                         exitInterface: 'none',
-                        metric: -1,
+                        metric: undefined,
                     },
                     ...prev.routes,
                 ];
@@ -165,7 +162,7 @@ function CreateRouterConfig({ rc, handleUpdateRouterConfig }: CreateRouterConfig
                     mask: '',
                     exitGateway: undefined,
                     exitInterface: 'none',
-                    metric: -1,
+                    metric: undefined,
                 }];
             }
             return {
@@ -191,17 +188,12 @@ function CreateRouterConfig({ rc, handleUpdateRouterConfig }: CreateRouterConfig
     }
 
     const handleUpdateRouteRow = (updatedRow: Route, originalRow: Route) => {
-        console.log(updatedRow);
         setRouterConfig((prev) => {
             return {
                 ...prev,
                 routes: [
                     ...prev.routes.filter((route) => route !== originalRow),
-                    {
-                        ...updatedRow,
-                        exitInterface: updatedRow.exitInterface == 'none' ? undefined : updatedRow.exitInterface,
-                        metric: updatedRow.metric == -1 ? undefined : updatedRow.metric
-                    }
+                    updatedRow
                 ]
             }
         })

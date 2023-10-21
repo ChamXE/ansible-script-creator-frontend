@@ -3,6 +3,7 @@ export interface Project {
     username: string;
     projectname: string;
     serverid: number;
+    generated: boolean;
     count?: number;
 }
 

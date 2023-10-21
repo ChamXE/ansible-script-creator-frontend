@@ -2,4 +2,5 @@ type Json = string | number | boolean | null | { [property: string | number]: Js
 
 interface Token {
     username: string;
+    expire: Date;
 }
