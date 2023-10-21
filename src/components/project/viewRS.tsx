@@ -33,9 +33,9 @@ function ViewRS ({ project, resetRS }: ViewRSProps) {
     const [connection, setConnection] = useState<RouterSwitch[] | null>(null);
     const [projectDevices, setProjectDevices] = useState<ProjectDevice | null>(null);
     const [newData, setNewData] = useState(0);
-    const [edit, setEdit] = useState<JSX.Element | null>(null);
+    const [edit, setEdit] = useState<React.ReactElement | null>(null);
     const connectionType = 'routerSwitch';
-    const handleOpen = () => setOpen(true);
+
     const handleClose = () =>  {
         setOpen(false);
         if(resetRS) resetRS();
@@ -46,7 +46,7 @@ function ViewRS ({ project, resetRS }: ViewRSProps) {
     }
 
     const handleNewDataIncoming = () => {
-        setNewData((prev) => prev += 1);
+        setNewData((prev) => prev + 1);
     }
 
     const column: GridColDef[] = [
@@ -99,7 +99,7 @@ function ViewRS ({ project, resetRS }: ViewRSProps) {
             const sureDelete = window.confirm('Are you sure you want to delete this connection?');
             if (sureDelete) {
                 const result = await deleteConnection(connection.projectid, connection.routerid, connection.switchid, connectionType);
-                if (result) setNewData((prev) => prev -= 1);
+                if (result) setNewData((prev) => prev - 1);
             }
         }
         else alert("Please select row!");
@@ -142,8 +142,7 @@ function ViewRS ({ project, resetRS }: ViewRSProps) {
             }
     
             if (Object.keys(response.data.data).length) {
-                const projectDevice: ProjectDevice = JSON.parse(JSON.stringify(response.data.data));
-                return projectDevice;
+                return JSON.parse(JSON.stringify(response.data.data));
             }
             return null;
         } catch (e) {

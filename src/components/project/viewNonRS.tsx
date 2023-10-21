@@ -34,15 +34,14 @@ function ViewNonRS ({ connectionType, project, resetNonRS }: ViewNonRSProps) {
     const [connection, setConnection] = useState<SwitchSwitch[] | SwitchHost[] | null>(null);
     const [projectDevices, setProjectDevices] = useState<ProjectDevice | null>(null);
     const [newData, setNewData] = useState(0);
-    const [edit, setEdit] = useState<JSX.Element | null>(null);
-    const handleOpen = () => setOpen(true);
+    const [edit, setEdit] = useState<React.ReactElement | null>(null);
     const handleClose = () =>  {
         setOpen(false);
         if(resetNonRS) resetNonRS();
     }
 
     const handleNewDataIncoming = () => {
-        setNewData((prev) => prev += 1);
+        setNewData((prev) => prev + 1);
     }
 
     const resetEdit = () => {
@@ -117,7 +116,7 @@ function ViewNonRS ({ connectionType, project, resetNonRS }: ViewNonRSProps) {
                     result = await deleteConnection(connection.projectid, connection.switchid, connection.hostid, connectionType);
                     
                 }
-                if (result) setNewData((prev) => prev -= 1);
+                if (result) setNewData((prev) => prev - 1);
             }
         }
         else alert("Please select row!");
@@ -164,8 +163,7 @@ function ViewNonRS ({ connectionType, project, resetNonRS }: ViewNonRSProps) {
             }
     
             if (Object.keys(response.data.data).length) {
-                const projectDevice: ProjectDevice = JSON.parse(JSON.stringify(response.data.data));
-                return projectDevice;
+                return JSON.parse(JSON.stringify(response.data.data));
             }
             return null;
         } catch (e) {
