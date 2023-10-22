@@ -25,7 +25,6 @@ dayjs.extend(duration);
 dayjs.tz.setDefault('Asia/Kuala_Lumpur');
 
 function App() {
-	// TODO => token n login mechanism
 	const { userToken, setUserToken } = useToken();
 
 	const isLoggedIn = !!userToken;

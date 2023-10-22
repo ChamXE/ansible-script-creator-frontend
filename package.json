@@ -33,6 +33,7 @@
     "build": "craco build",
     "test": "craco test",
     "eject": "craco eject",
+    "dev": "cross-env NODE_ENV=development craco start",
     "predeploy": "npm run build && type 404.html > ./build/404.html",
     "deploy": "echo fyp-rennaux.me > ./build/CNAME && gh-pages -d ./build"
   },
@@ -56,6 +57,7 @@
   },
   "devDependencies": {
     "@types/react-input-mask": "^3.0.2",
+    "cross-env": "^7.0.3",
     "gh-pages": "^6.0.0"
   }
 }

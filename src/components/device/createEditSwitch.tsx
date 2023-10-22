@@ -26,12 +26,11 @@ const style = {
 
 function CreateEditSwitch({ switchR, project, resetEdit, newDataIncoming }: CreateEditSwitchProps) {
     const [open, setOpen] = useState(!!switchR);
-    const [controller, setController] = useState('10.100.10.30');
+    const controller = process.env.REACT_APP_CONTROLLER!;
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
         setOpen(false);
-        setController('');
         if(resetEdit) resetEdit();
     };
 
