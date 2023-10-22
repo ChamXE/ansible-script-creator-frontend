@@ -1,6 +1,6 @@
 import { createDevice } from '@/components/device/functions';
 import { Backdrop, Box, Button, Container, Fade, MenuItem, Modal, TextField, Typography } from '@mui/material';
-import { Host } from '~/device';
+import { Host, Router } from '~/device';
 import * as React from 'react';
 import { useState } from 'react';
 import { Project } from '@/models/project';
@@ -8,6 +8,7 @@ import { Subnet } from "@/components/global";
 
 interface CreateEditHostProps {
     host?: Host;
+    router: Router[] | null;
     project: Project[] | null;
     resetEdit?: () => void;
     newDataIncoming: () => void;
@@ -25,8 +26,9 @@ const style = {
     p: 4,
 };
 
-function CreateEditHost({ host, project, resetEdit, newDataIncoming }: CreateEditHostProps) {
+function CreateEditHost({ host, router, project, resetEdit, newDataIncoming }: CreateEditHostProps) {
     const [open, setOpen] = useState(!!host);
+    const [pId, setProjectId] = useState<number | null>(host ? host.projectid : null);
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
         setOpen(false);
@@ -66,6 +68,7 @@ function CreateEditHost({ host, project, resetEdit, newDataIncoming }: CreateEdi
                 id="projectid"
                 select
                 defaultValue={host ? host.projectid : "none"}
+                onChange={handleProjectIdChange}
             >
                 <MenuItem key="none" value="none">Select Project</MenuItem>
                 {
@@ -100,6 +103,24 @@ function CreateEditHost({ host, project, resetEdit, newDataIncoming }: CreateEdi
                     })
                 }
             </TextField>
+            <TextField
+                margin="normal"
+                fullWidth
+                required
+                name="defaultgateway"
+                label="Default Gateway"
+                type="text"
+                id="defaultgateway"
+                select
+                defaultValue={host ? host.defaultgateway : "none"}
+            >
+                <MenuItem key="none" value="none">Select Default Gateway</MenuItem>
+                {
+                    router?.filter(({ projectid }) => projectid === pId).map(({ routerid, routername }) => {
+                        return <MenuItem key={routerid} value={`${routerid}`}>{routername}</MenuItem>
+                    })
+                }
+            </TextField>
             <Button
                 type="submit"
                 fullWidth
@@ -111,19 +132,28 @@ function CreateEditHost({ host, project, resetEdit, newDataIncoming }: CreateEdi
         </Box>
     )
 
+    const handleProjectIdChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const pId = event.target.value;
+        if(pId === "none") return setProjectId(null);
+        return setProjectId(+pId);
+    }
+
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         const projectId = formData.get('projectid')!.toString();
         const subnet = formData.get('subnet')!.toString();
+        const defaultgateway = formData.get('defaultgateway')!.toString();
         if (projectId === 'none') return alert('Please select the project this router belongs to!');
         if(subnet === 'none') return alert('Please select subnet!');
+        if(defaultgateway === 'none') return alert('Please select default gateway');
         const h: Host = {
             hostid: host ? host.hostid : null,
             projectid: +projectId,
             hostname: formData.get('hostname')!.toString(),
             ip: formData.get('ip')!.toString(),
             subnet: subnet,
+            defaultgateway: +defaultgateway,
         }
 
         const result = await createDevice(h, 'host', !!host);

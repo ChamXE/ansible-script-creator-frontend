@@ -26,6 +26,7 @@ export interface Host {
     projectid: number;
     ip: string | null;
     subnet: string | null;
+    defaultgateway: number;
 }
 
 export interface RouterConfiguration {

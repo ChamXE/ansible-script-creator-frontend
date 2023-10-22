@@ -2,7 +2,6 @@ import axios, { CancelTokenSource } from "axios";
 import { getURL } from "../global";
 import { Server, Router, Switch, Host } from "@/models/device";
 
-
 export async function getDevice(username: string, deviceType: string, source: CancelTokenSource): Promise<Server[] | Router[] | Switch[] | Host[] | null> {
     try {
         const response = await axios.get(`${getURL()}/device/${deviceType}All${deviceType === 'server' ? '' : `/${username}`}`, {
@@ -17,17 +16,13 @@ export async function getDevice(username: string, deviceType: string, source: Ca
         if (Object.keys(response.data.data).length) {
             switch (deviceType) {
                 case "server":
-                    const server: Server[] = JSON.parse(JSON.stringify(response.data.data.server));
-                    return server;
+                    return JSON.parse(JSON.stringify(response.data.data.server));
                 case "router":
-                    const router: Router[] = JSON.parse(JSON.stringify(response.data.data.router));
-                    return router;
+                    return JSON.parse(JSON.stringify(response.data.data.router));
                 case "switch":
-                    const switches: Switch[] = JSON.parse(JSON.stringify(response.data.data.switch));
-                    return switches;
+                    return JSON.parse(JSON.stringify(response.data.data.switch));
                 case "host":
-                    const host: Host[] = JSON.parse(JSON.stringify(response.data.data.host));
-                    return host;
+                    return JSON.parse(JSON.stringify(response.data.data.host));
                 default:
                     return null;
             }

@@ -16,6 +16,7 @@ function HostList() {
     const apiRef = useGridApiRef();
     const { userToken } = useToken();
     const [device, setDevice] = useState<Host[] | null>(null);
+    const [router, setRouter] = useState<Router[] | null>(null);
     const [project, setProject] = useState<Project[] | null>(null);
     const [newData, setNewData] = useState(0);
     const [edit, setEdit] = useState<React.ReactElement | null>(null);
@@ -32,6 +33,13 @@ function HostList() {
             field: 'subnet', headerName: 'Subnet Mask', flex: 1, type: 'string', valueFormatter: (params: GridValueFormatterParams<string>) => {
                 return params.value.length === 0 ? "N/A" : params.value;
             } 
+        },
+        {
+            field: 'defaultgateway', headerName: 'Default Gateway', flex: 1, type: 'string', valueFormatter: (params: GridValueFormatterParams<number>) => {
+                if(router) {
+                    return router.filter(({ routerid }) => params.value === routerid)[0].routername;
+                }
+            }
         },
         {
             field: 'projectid', headerName: 'Project', flex: 1, type: 'string', valueFormatter: (params: GridValueFormatterParams<number>) => {
@@ -56,6 +64,11 @@ function HostList() {
             )
         }
     ];
+
+    function isRouter(item: Server[] | Router[] | Switch[] | Host[]): item is Router[] {
+        if (!item.length) return true;
+        return 'routername' in item[0];
+    }
 
     function isHost(item: Server[] | Router[] | Switch[] | Host[]): item is Host[] {
         if (!item.length) return true;
@@ -112,7 +125,7 @@ function HostList() {
         if(row.size) {
             const host: Host = row.values().next().value
             setEdit(
-                <CreateEditHost host={host} project={project} resetEdit={resetEdit} newDataIncoming={newDataIncoming}/>
+                <CreateEditHost host={host} router={router} project={project} resetEdit={resetEdit} newDataIncoming={newDataIncoming}/>
             );
         }
     }
@@ -130,12 +143,18 @@ function HostList() {
             if (devices) setProject(devices);
         }
 
+        const router = async () => {
+            const devices = await getDevice(userToken!.username, 'router', source);
+            if (devices && isRouter(devices)) setRouter(devices);
+        }
+
         const device = async () => {
             const devices = await getDevice(userToken!.username, 'host', source);
             if (devices && isHost(devices)) setDevice(devices);
         };
 
         project();
+        router();
         device();
 
         return () => {
@@ -150,7 +169,7 @@ function HostList() {
         >
             <Box component="span" mb="1rem" display="flex" alignItems="center">
                 <Typography fontSize='1.5rem'>Host</Typography>
-                <CreateEditHost newDataIncoming={newDataIncoming} project={project} />
+                <CreateEditHost newDataIncoming={newDataIncoming} project={project} router={router} />
             </Box>
             {
                 device && generateTable(device)
