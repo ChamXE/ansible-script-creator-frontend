@@ -3,7 +3,7 @@ import {getProject, getServer, getURL} from '@/components/global';
 import React, {useState, useEffect} from "react";
 import useToken from "@/components/app/useToken";
 import axios from "axios";
-import {DataGrid, GridColDef, GridRenderCellParams, useGridApiRef} from "@mui/x-data-grid";
+import {DataGrid, GridColDef, GridRenderCellParams, GridValueFormatterParams, useGridApiRef} from "@mui/x-data-grid";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {Server} from "@/models/device";
@@ -81,7 +81,7 @@ function ProjectList() {
         },
         {
             field: 'generated',
-            headerName: 'Generate Hostfile',
+            headerName: 'Generate',
             flex: 1,
             renderCell: (params: GridRenderCellParams<any, boolean>) => (
                 <Button
@@ -92,6 +92,29 @@ function ProjectList() {
                 >
                     Generate
                 </Button>
+            )
+        },
+        {
+            field: 'null1',
+            headerName: 'Destroy',
+            flex: 1,
+            renderCell: (params: GridRenderCellParams) => (
+                <Button
+                    variant="contained"
+                    sx={{marginLeft: '1rem'}}
+                    onClick={handleDestroyProject}
+                    disabled={(!params.row.generated && !params.row.ready) || (params.row.generated && !params.row.ready)}
+                >
+                    Destroy
+                </Button>
+            )
+        },
+        {
+            field: 'ready',
+            headerName: 'Status',
+            flex: 1,
+            valueFormatter: (params: GridValueFormatterParams<boolean>) => (
+                params.value ? '✔️' : '❌'
             )
         },
     ];
@@ -162,15 +185,34 @@ function ProjectList() {
         if (apiRef.current.getSelectedRows().size) {
             const row = apiRef.current.getSelectedRows().values().next().value;
             if (row.generated) return alert('This project has been generated!');
-            const sureGenerate = window.confirm(`Are you sure you want to generate the hostfile for the project ${row.projectname}? This action is irreversible and you cannot do it again!`);
+            let confirmString = `Are you sure you want to generate the project ${row.projectname}?\n`;
+            confirmString += 'Disclaimer: Please refresh after about 4 - 5 minutes to check the status of the project.';
+            confirmString += ' It takes some time for the topology and configuration to be done and ready to be used.';
+            const sureGenerate = window.confirm(confirmString);
             if (sureGenerate) {
                 const result = await generateProject(row.projectid);
                 if (result) {
-                    alert('Project generated!');
                     setNewData((prev) => prev - 1);
                 } else return alert('Project creation failed!');
             }
-        }
+        } else alert("Please select row!");
+    }
+
+    const handleDestroyProject = async () => {
+        if (apiRef.current.getSelectedRows().size) {
+            const row = apiRef.current.getSelectedRows().values().next().value;
+            if (!row.generated) return alert('This project has not been generated!');
+            let confirmString = `Are you sure you want to destroy the project ${row.projectname}?\n`;
+            confirmString += 'Disclaimer: Please refresh after about 4 - 5 minutes to check the status of the project.';
+            confirmString += ' It takes some time for the topology and configuration to be removed and ready to generate again.';
+            const sureDestroy = window.confirm(confirmString);
+            if (sureDestroy) {
+                const result = await destroyProject(row.projectid);
+                if (result) {
+                    setNewData((prev) => prev + 1);
+                } else return alert('Project destruction failed!');
+            }
+        } else alert("Please select row!");
     }
 
     const generateTable = (project: Project[]) => (
@@ -219,6 +261,18 @@ function ProjectList() {
         } catch (e) {
             console.error(e.message);
             alert('Project generation failed!');
+            return 0;
+        }
+    }
+
+    async function destroyProject(projectId: number): Promise<number> {
+        try {
+            const response = await axios.post(`${getURL()}/project/destroyProject/${projectId}`);
+            if (response.data.data.result) return 1;
+            return 0;
+        } catch (e) {
+            console.error(e.message);
+            alert('Project destruction failed!');
             return 0;
         }
     }

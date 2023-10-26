@@ -4,6 +4,7 @@ export interface Project {
     projectname: string;
     serverid: number;
     generated: boolean;
+    ready: boolean;
     count?: number;
 }
 

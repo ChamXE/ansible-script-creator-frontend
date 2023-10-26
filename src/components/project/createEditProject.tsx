@@ -77,7 +77,8 @@ function CreateEditProject({ project, server, resetEdit, newDataIncoming }: Crea
             projectname: formData.get('projectname')!.toString(),
             username: userToken!.username,
             serverid: server![0].serverid!,
-            generated: project ? project.generated : false // formData.get('generated')!.toString(),
+            generated: project ? project.generated : false,
+            ready: project ? project.ready : false,
         }
 
         const result = await createProject(p, !!project);
