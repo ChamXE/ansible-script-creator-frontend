@@ -53,6 +53,7 @@ function CreateEditRS({ projectId, connection, projectDevices, resetEdit, handle
             portname: routername + switchname,
             ip: formData.get('ip')!.toString(),
             subnet: subnet,
+            interfacename: connection ? connection.interfacename : null,
         }
         let result: number;
         if(connection) {
@@ -136,6 +137,18 @@ function CreateEditRS({ projectId, connection, projectDevices, resetEdit, handle
                         return <MenuItem key={s} value={Subnet[+s]}>/{s}</MenuItem>
                     })
                 }
+            </TextField>
+            <TextField
+                margin="normal"
+                fullWidth
+                required
+                name="interfacename"
+                label="Interface"
+                type="text"
+                id="interfacename"
+                defaultValue={connection ? connection.interfacename : ''}
+                disabled
+            >
             </TextField>
             <Button
                 type="submit"

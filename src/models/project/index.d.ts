@@ -14,7 +14,8 @@ export interface RouterSwitch {
     switchid: number;
     portname: string;
     ip: string;
-    subnet: string;    
+    subnet: string;
+    interfacename: string | null;
 }
 
 export interface SwitchSwitch {

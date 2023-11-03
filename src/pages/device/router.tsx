@@ -23,7 +23,13 @@ function RouterList() {
     const column: GridColDef[] = [
         { field: 'routerid', headerName: 'ID', flex: 0.5, type: 'string' },
         { field: 'routername', headerName: 'Name', flex: 0.5, type: 'string' },
-        { field: 'management', headerName: 'Management IP Address', flex: 1, type: 'string', valueFormatter: (params: GridValueFormatterParams) => params.value.length ? params.value : "N/A" },
+        {
+            field: 'management',
+            headerName: 'Management IP Address',
+            flex: 1,
+            type: 'string',
+            valueFormatter: (params: GridValueFormatterParams) => params.value ? params.value : "N/A"
+        },
         {
             field: 'projectid', headerName: 'Project', flex: 0.5, type: 'string', valueFormatter: (params: GridValueFormatterParams<number>) => {
                 if (project) {
@@ -43,7 +49,7 @@ function RouterList() {
                             users.map(({ username, password, privilege }, index) => (
                                 <Box key={username}>
                                     <Typography>Username: {username}</Typography>
-                                    <Typography>Password: {password}</Typography>
+                                    {/*<Typography>Password: {password}</Typography>*/}
                                     <Typography>Privilege: {privilege}</Typography>
                                     {index !== users.length - 1 ? <Divider /> : <></>}
                                 </Box>

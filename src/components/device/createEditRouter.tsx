@@ -105,7 +105,7 @@ function CreateEditRouter({ router, project, resetEdit, newDataIncoming }: Creat
                 type="text"
                 id="management"
                 disabled={!router}
-                defaultValue={router ? router.management : ''}
+                defaultValue={router ? (router.management ? router.management : '') : ''}
             />
             <CreateRouterConfig rc={router ? router.configuration : routerConfig} handleUpdateRouterConfig={handleUpdateRouterConfig} />
             <Button
@@ -122,13 +122,14 @@ function CreateEditRouter({ router, project, resetEdit, newDataIncoming }: Creat
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
+        const management = formData.get('management');
         const projectId = formData.get('projectid')!.toString();
         if (projectId === 'none') return alert('Please select the project this router belongs to!');
         const r: Router = {
             routerid: router ? router.routerid : null,
             projectid: +projectId,
             routername: formData.get('routername')!.toString(),
-            management: router ? formData.get('management')!.toString() : "",
+            management: router ? (management? management.toString() : null) : null,
             configuration: routerConfig,
         }
 

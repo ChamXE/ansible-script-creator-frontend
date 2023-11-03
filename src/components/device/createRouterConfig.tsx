@@ -55,14 +55,17 @@ function CreateRouterConfig({ rc, handleUpdateRouterConfig }: CreateRouterConfig
             editable: true,
             valueOptions: [...new Array(23).keys()].map((i) => `/${i + 8}`)
         },
-        // {
-        //     field: 'exitInterface',
-        //     headerName: 'Exit Interface',
-        //     flex: 1,
-        //     type: 'singleSelect',
-        //     editable: true,
-        //     valueOptions: ['none'],
-        // },
+        {
+            field: 'exitInterface',
+            headerName: 'Exit Interface',
+            flex: 1,
+            type: 'singleSelect',
+            editable: true,
+            valueOptions: ['none'],
+            valueFormatter: (params: GridValueFormatterParams<string | undefined>) => {
+                return params.value ?? "none";
+            },
+        },
         {
             field: 'exitGateway',
             headerName: 'Exit Gateway',
@@ -150,7 +153,7 @@ function CreateRouterConfig({ rc, handleUpdateRouterConfig }: CreateRouterConfig
                         prefix: '',
                         mask: '',
                         exitGateway: undefined,
-                        exitInterface: 'none',
+                        exitInterface: undefined,
                         metric: undefined,
                     },
                     ...prev.routes,
@@ -161,7 +164,7 @@ function CreateRouterConfig({ rc, handleUpdateRouterConfig }: CreateRouterConfig
                     prefix: '',
                     mask: '',
                     exitGateway: undefined,
-                    exitInterface: 'none',
+                    exitInterface: undefined,
                     metric: undefined,
                 }];
             }
@@ -193,11 +196,17 @@ function CreateRouterConfig({ rc, handleUpdateRouterConfig }: CreateRouterConfig
                 ...prev,
                 routes: [
                     ...prev.routes.filter((route) => route !== originalRow),
-                    updatedRow
+                    {
+                        ...updatedRow,
+                        exitInterface: updatedRow.exitInterface === "none" ? undefined : updatedRow.exitInterface
+                    }
                 ]
             }
         })
-        return updatedRow;
+        return {
+            ...updatedRow,
+            exitInterface: updatedRow.exitInterface === "none" ? undefined : updatedRow.exitInterface
+        };
     }
 
     const updateParentRouterConfig = () => {
