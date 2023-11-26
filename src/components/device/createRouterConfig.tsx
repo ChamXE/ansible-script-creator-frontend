@@ -3,13 +3,16 @@ import { Box, Button, Container, Divider, IconButton, Typography } from '@mui/ma
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Route, RouterConfiguration, RouterUser } from '~/device';
 import { DataGrid, GridColDef, GridValueFormatterParams, useGridApiRef } from '@mui/x-data-grid';
+import { Subnet } from "@/components/global";
+import { Interfaces } from "~/project";
 
 interface CreateRouterConfigProps {
     rc: RouterConfiguration;
+    interfaces: Interfaces | null;
     handleUpdateRouterConfig: (rc: RouterConfiguration) => void;
 }
 
-function CreateRouterConfig({ rc, handleUpdateRouterConfig }: CreateRouterConfigProps) {
+function CreateRouterConfig({ rc, interfaces, handleUpdateRouterConfig }: CreateRouterConfigProps) {
     const [routerConfig, setRouterConfig] = useState(rc);
     const userApiRef = useGridApiRef();
     const routeApiRef = useGridApiRef();
@@ -53,7 +56,7 @@ function CreateRouterConfig({ rc, handleUpdateRouterConfig }: CreateRouterConfig
             flex: 1,
             type: 'singleSelect',
             editable: true,
-            valueOptions: [...new Array(23).keys()].map((i) => `/${i + 8}`)
+            valueOptions: Object.keys(Subnet).reverse().map((s) => `/${s}`)
         },
         {
             field: 'exitInterface',
@@ -61,10 +64,9 @@ function CreateRouterConfig({ rc, handleUpdateRouterConfig }: CreateRouterConfig
             flex: 1,
             type: 'singleSelect',
             editable: true,
-            valueOptions: ['none'],
-            valueFormatter: (params: GridValueFormatterParams<string | undefined>) => {
-                return params.value ?? "none";
-            },
+            valueOptions: interfaces? Object.keys(interfaces).map((key) => {
+                return `${key} - ${interfaces[key]}`;
+            }) : ['none']
         },
         {
             field: 'exitGateway',

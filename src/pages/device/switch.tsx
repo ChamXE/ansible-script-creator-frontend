@@ -23,7 +23,15 @@ function SwitchList() {
     const column: GridColDef[] = [
         { field: 'switchid', headerName: 'ID', flex: 1, type: 'string' },
         { field: 'switchname', headerName: 'Name', flex: 1, type: 'string' },
-        { field: 'controller', headerName: 'Controller', flex: 1, type: 'string' },
+        {
+            field: 'controller',
+            headerName: 'Controller',
+            flex: 1,
+            type: 'string',
+            valueFormatter: (params: GridValueFormatterParams<string>) => {
+                return !!params.value ? '✔️' : '❌';
+            }
+        },
         {
             field: 'projectid', headerName: 'Project', flex: 1, type: 'string', valueFormatter: (params: GridValueFormatterParams<number>) => {
                 if (project) {

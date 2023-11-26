@@ -133,7 +133,7 @@ function CreateEditRS({ projectId, connection, projectDevices, resetEdit, handle
             >
                 <MenuItem key="none" value="none">Select Subnet</MenuItem>
                 {
-                    Object.keys(Subnet).map((s) => {
+                    Object.keys(Subnet).reverse().map((s) => {
                         return <MenuItem key={s} value={Subnet[+s]}>/{s}</MenuItem>
                     })
                 }

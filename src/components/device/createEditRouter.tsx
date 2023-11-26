@@ -2,10 +2,11 @@ import { createDevice } from '@/components/device/functions';
 import { Backdrop, Box, Button, Container, Fade, MenuItem, Modal, TextField, Typography } from '@mui/material';
 import { Router, RouterConfiguration } from '~/device';
 import * as React from 'react';
-import { useState } from 'react';
-import { Project } from '~/project';
+import { useState, useEffect } from 'react';
+import {Interfaces, Project} from '~/project';
 import CreateRouterConfig from './createRouterConfig';
-import { Subnet } from '@/components/global';
+import { getURL, Subnet } from '@/components/global';
+import axios, {CancelTokenSource} from "axios";
 
 interface CreateEditRouterProps {
     router?: Router;
@@ -34,6 +35,7 @@ function CreateEditRouter({ router, project, resetEdit, newDataIncoming }: Creat
         users: [],
         routes: []
     });
+    const [interfaces, setInterfaces] = useState<Interfaces | null>(null);
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
         setOpen(false);
@@ -50,7 +52,8 @@ function CreateEditRouter({ router, project, resetEdit, newDataIncoming }: Creat
             routes: rc.routes.map((route) => {
                 return {
                     ...route,
-                    mask: Subnet[+route.mask.slice(1)]
+                    mask: Subnet[+route.mask.slice(1)],
+                    exitInterface: route.exitInterface? route.exitInterface.replace(/\s/g, "").split("-")[0] : undefined
                 }
             })
         });
@@ -104,10 +107,10 @@ function CreateEditRouter({ router, project, resetEdit, newDataIncoming }: Creat
                 label="Management IP Address"
                 type="text"
                 id="management"
-                disabled={!router}
+                disabled
                 defaultValue={router ? (router.management ? router.management : '') : ''}
             />
-            <CreateRouterConfig rc={router ? router.configuration : routerConfig} handleUpdateRouterConfig={handleUpdateRouterConfig} />
+            <CreateRouterConfig rc={router ? router.configuration : routerConfig} interfaces={interfaces} handleUpdateRouterConfig={handleUpdateRouterConfig} />
             <Button
                 type="submit"
                 fullWidth
@@ -119,17 +122,52 @@ function CreateEditRouter({ router, project, resetEdit, newDataIncoming }: Creat
         </Box>
     )
 
+    useEffect(() => {
+        const CancelToken = axios.CancelToken;
+        const source = CancelToken.source();
+
+        const getInterface = async () => {
+            const intfs = await getInterfaces(router!.routerid!, source);
+            setInterfaces(intfs);
+        }
+
+        if(router) getInterface();
+    }, []);
+
+    async function getInterfaces(routerId: number, source: CancelTokenSource): Promise<Interfaces | null> {
+        try {
+            const response = await axios.get(`${getURL()}/project/interfaces/${routerId}`, {
+                cancelToken: source.token
+            });
+
+            if (!response.data.result) {
+                console.error(response.data.message);
+                return null;
+            }
+
+            if (response.data.data.interfaces) {
+                return JSON.parse(JSON.stringify(response.data.data.interfaces));
+            }
+            return null;
+        } catch (e) {
+            if (e.code !== "ERR_CANCELED") {
+                alert('Error fetching project!');
+                console.error(e.message);
+            }
+            return null;
+        }
+    }
+
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
-        const management = formData.get('management');
         const projectId = formData.get('projectid')!.toString();
         if (projectId === 'none') return alert('Please select the project this router belongs to!');
         const r: Router = {
             routerid: router ? router.routerid : null,
             projectid: +projectId,
             routername: formData.get('routername')!.toString(),
-            management: router ? (management? management.toString() : null) : null,
+            management: router ? (router.management? router.management : null) : null,
             configuration: routerConfig,
         }
 

@@ -1,5 +1,5 @@
 import { createDevice } from '@/components/device/functions';
-import { Backdrop, Box, Button, Container, Fade, MenuItem, Modal, TextField, Typography } from '@mui/material';
+import { Backdrop, Box, Button, Container, Fade, FormControl, FormControlLabel, FormLabel, MenuItem, Modal, Radio, RadioGroup, TextField, Typography } from '@mui/material';
 import { Switch } from '~/device';
 import * as React from 'react';
 import { useState } from 'react';
@@ -75,18 +75,18 @@ function CreateEditSwitch({ switchR, project, resetEdit, newDataIncoming }: Crea
                     })
                 }
             </TextField>
-            <TextField
-                margin="normal"
-                fullWidth
-                required
-                name="controller"
-                label="Controller IP"
-                type="text"
-                id="controller"
-                disabled
-                defaultValue={controller}
-                value={controller}
-            />
+            <FormControl required>
+                <FormLabel id="controller">Enable STP</FormLabel>
+                <RadioGroup
+                    row
+                    aria-labelledby="demo-row-radio-buttons-group-label"
+                    name="controller"
+                    defaultValue={switchR ? `${!!switchR.controller}` : 'true'}
+                >
+                    <FormControlLabel value="true" control={<Radio />} label="True" />
+                    <FormControlLabel value="false" control={<Radio />} label="False" />
+                </RadioGroup>
+            </FormControl>
             <Button
                 type="submit"
                 fullWidth
@@ -104,11 +104,12 @@ function CreateEditSwitch({ switchR, project, resetEdit, newDataIncoming }: Crea
         const formData = new FormData(event.currentTarget);
         const projectId = formData.get('projectid')!.toString();
         if (projectId === 'none') return alert('Please select the project this router belongs to!');
+        const needController = formData.get('controller')!.toString();
         const s: Switch = {
             switchid: switchR ? switchR.switchid : null,
             projectid: +projectId,
             switchname: formData.get('switchname')!.toString(),
-            controller: controller,
+            controller: needController === "true" ? controller : null,
         }
 
         if (s) {

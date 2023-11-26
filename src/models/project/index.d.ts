@@ -31,3 +31,7 @@ export interface SwitchHost {
     hostid: number;
     portname: string;
 }
+
+export type Interfaces = {
+    [interfacename: string]: string
+}
