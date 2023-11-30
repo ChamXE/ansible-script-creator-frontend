@@ -64,9 +64,20 @@ function CreateRouterConfig({ rc, interfaces, handleUpdateRouterConfig }: Create
             flex: 1,
             type: 'singleSelect',
             editable: true,
-            valueOptions: interfaces? Object.keys(interfaces).map((key) => {
-                return `${key} - ${interfaces[key]}`;
-            }) : ['none']
+            valueOptions: () => {
+                let options = ['none'];
+                if(interfaces) {
+                    options = options.concat(...Object.keys(interfaces).map((key) => {
+                        let ip = "";
+                        for(let i = 0; i < interfaces[key].length; i++) {
+                            ip += interfaces[key][i];
+                            if(i !== interfaces[key].length - 1) ip += ", "
+                        }
+                        return `${key} - ${ip}`;
+                    }));
+                }
+                return options;
+            },
         },
         {
             field: 'exitGateway',

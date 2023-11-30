@@ -2,10 +2,9 @@ import { Backdrop, Box, Container, Fade, IconButton, Modal, Typography } from '@
 import { useEffect, useState } from "react";
 import { Project, RouterSwitch, SwitchHost, SwitchSwitch } from "@/models/project";
 import { ProjectDevice } from "@/models/device";
-import axios, { CancelTokenSource } from "axios";
-import { getURL } from "../global";
+import axios from "axios";
 import { DataGrid, GridColDef, GridValueFormatterParams, useGridApiRef } from '@mui/x-data-grid';
-import { deleteConnection, getConnection } from './functions';
+import { deleteConnection, getConnection, getProjectDevices } from './functions';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CreateEditRS from './createEditRS';
@@ -60,8 +59,38 @@ function ViewRS ({ project, resetRS }: ViewRSProps) {
                 return projectDevices?.switch.filter(({ switchid }) => switchid === params.value)[0].switchname;
             }
         },
-        { field: 'ip', headerName: 'IP Address', flex: 1, type: 'string', },
-        { field: 'subnet', headerName: 'Subnet Mask', flex: 1, type: 'string', },
+        {
+            field: 'configuration-ip',
+            headerName: 'IP Address',
+            flex: 1,
+            type: 'string',
+            valueFormatter: (params: GridValueFormatterParams) => {
+                const { configuration } = params.api.getRow(params.id!);
+                const ips = Object.keys(configuration);
+                let returnValue = "";
+                for(let i = 0; i < ips.length; i++) {
+                    returnValue += ips[i];
+                    if(i !== ips.length-1) returnValue += "\n";
+                }
+                return returnValue;
+            }
+        },
+        {
+            field: 'configuration-subnet',
+            headerName: 'Subnet Mask',
+            flex: 1,
+            type: 'string',
+            valueFormatter: (params: GridValueFormatterParams) => {
+                const { configuration } = params.api.getRow(params.id!);
+                const ips = Object.values(configuration);
+                let returnValue = "";
+                for(let i = 0; i < ips.length; i++) {
+                    returnValue += ips[i];
+                    if(i !== ips.length-1) returnValue += "\n";
+                }
+                return returnValue;
+            }
+        },
         {
             field: 'null', headerName: 'Action', flex: 1, renderCell: () => (
                 <Box component="span" display="flex">
@@ -117,7 +146,10 @@ function ViewRS ({ project, resetRS }: ViewRSProps) {
                 initialState={{
                     pagination: {
                         paginationModel: { page: 0, pageSize: 5 },
-                    }
+                    },
+                    sorting: {
+                        sortModel: [{ field: 'routerid', sort: 'asc' }],
+                    },
                 }}
                 pageSizeOptions={[5, 10]}
                 getRowId={(row) => `${row.projectid}${row.routerid}${row.switchid}`}
@@ -130,29 +162,7 @@ function ViewRS ({ project, resetRS }: ViewRSProps) {
         );
     }
 
-    async function getProjectDevices(projectId: number, source: CancelTokenSource): Promise<ProjectDevice | null> {
-        try {
-            const response = await axios.get(`${getURL()}/device/${projectId}`, {
-                cancelToken: source.token
-            });
-    
-            if (!response.data.result) {
-                console.error(response.data.message);
-                return null;
-            }
-    
-            if (Object.keys(response.data.data).length) {
-                return JSON.parse(JSON.stringify(response.data.data));
-            }
-            return null;
-        } catch (e) {
-            if (e.code !== "ERR_CANCELED") {
-                alert('Error fetching devices in this project!');
-                console.error(e.message);
-            }
-            return null;
-        }
-    }
+
 
     function isRouterSwitch(item: RouterSwitch[] | SwitchSwitch[] | SwitchHost[]): item is RouterSwitch[] {
         if (!item.length) return true;

@@ -2,10 +2,9 @@ import { Backdrop, Box, Container, Fade, IconButton, Modal, Typography } from '@
 import { useEffect, useState } from "react";
 import { Project, RouterSwitch, SwitchHost, SwitchSwitch } from "@/models/project";
 import { ProjectDevice } from "@/models/device";
-import axios, { CancelTokenSource } from "axios";
-import { getURL } from "../global";
+import axios from "axios";
 import { DataGrid, GridColDef, GridValueFormatterParams, useGridApiRef } from '@mui/x-data-grid';
-import { deleteConnection, getConnection } from './functions';
+import { deleteConnection, getConnection, getProjectDevices } from './functions';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CreateEditNonRS from './createEditNonRS';
@@ -149,30 +148,6 @@ function ViewNonRS ({ connectionType, project, resetNonRS }: ViewNonRSProps) {
                 autoHeight
             />
         );
-    }
-
-    async function getProjectDevices(projectId: number, source: CancelTokenSource): Promise<ProjectDevice | null> {
-        try {
-            const response = await axios.get(`${getURL()}/device/${projectId}`, {
-                cancelToken: source.token
-            });
-    
-            if (!response.data.result) {
-                console.error(response.data.message);
-                return null;
-            }
-    
-            if (Object.keys(response.data.data).length) {
-                return JSON.parse(JSON.stringify(response.data.data));
-            }
-            return null;
-        } catch (e) {
-            if (e.code !== "ERR_CANCELED") {
-                alert('Error fetching devices in this project!');
-                console.error(e.message);
-            }
-            return null;
-        }
     }
 
     function isSwitchSwitch(item: RouterSwitch[] | SwitchSwitch[] | SwitchHost[]): item is SwitchSwitch[] {

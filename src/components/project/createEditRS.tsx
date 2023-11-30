@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { ProjectDevice } from "@/models/device";
-import { RouterSwitch } from "@/models/project";
-import { Backdrop, Box, Button, Fade, MenuItem, Modal, TextField, Typography } from '@mui/material';
+import { InterfaceConfiguration, RouterSwitch } from "@/models/project";
+import { Backdrop, Box, Button, Fade, IconButton, MenuItem, Modal, TextField, Typography } from '@mui/material';
 import { createConnection, updateConnection } from './functions';
-import {Subnet} from "@/components/global";
+import { Subnet } from "@/components/global";
 import * as React from "react";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface CreateEditRSProps {
     projectId: number;
@@ -24,11 +25,18 @@ const style = {
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
+    maxHeight: '60vh',
 };
 
 function CreateEditRS({ projectId, connection, projectDevices, resetEdit, handleNewDataIncoming }: CreateEditRSProps) {
     const connectionType = 'routerSwitch';
     const [open, setOpen] = useState(!!connection);
+    const [ip, setIP] = useState<string[]>(
+        connection? (connection.configuration? Object.keys(connection.configuration) : [""]): [""]
+    );
+    const [subnet, setSubnet] = useState<string[]>(
+        connection? (connection.configuration? Object.values(connection.configuration) : [""]): [""]
+    );
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
         setOpen(false);
@@ -43,16 +51,20 @@ function CreateEditRS({ projectId, connection, projectDevices, resetEdit, handle
         const { routername } = projectDevices!.router.filter(({ routerid }) => routerid === +routerId)[0];
         const switchId = formData.get('switchid')!.toString();
         if(switchId === 'none') return alert('Please select switch!');
-        const subnet = formData.get('subnet')!.toString();
-        if(subnet === 'none') return alert('Please select subnet!');
         const { switchname } = projectDevices!.switch.filter(({ switchid }) => switchid === +switchId)[0];
+        for(let i = 0; i < subnet.length; i++) {
+            if(subnet[i] === 'none') return alert(`Please select subnet mask for interface ${i + 1}!`);
+        }
+        const configuration: InterfaceConfiguration = {};
+        ip.forEach((elem, idx) => {
+            configuration[elem] = subnet[idx]
+        });
         const routerSwitch: RouterSwitch = {
             projectid: projectId,
             routerid: +routerId,
             switchid: +switchId,
             portname: routername + switchname,
-            ip: formData.get('ip')!.toString(),
-            subnet: subnet,
+            configuration: configuration,
             interfacename: connection ? connection.interfacename : null,
         }
         let result: number;
@@ -71,8 +83,76 @@ function CreateEditRS({ projectId, connection, projectDevices, resetEdit, handle
         }
     }
 
+    const handleUpdateIP = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const index = event.currentTarget.id.split('-')[1];
+        setIP((prev) => prev.map((value, idx) => {
+            if(idx === +index) return event.currentTarget.value;
+            return value;
+        }))
+    }
+
+    const handleUpdateSubnet = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const index = event.target.name.split('-')[1];
+        setSubnet((prev) => prev.map((value, idx) => {
+            if(idx === +index) return event.target.value;
+            return value;
+        }))
+    }
+
+    const addNewIP = () => {
+        setIP((prev) => [...prev, ""]);
+        setSubnet((prev) => [...prev, ""]);
+    }
+
+    const deleteIP = (event: React.MouseEvent<HTMLElement>) => {
+        const index = event.currentTarget.id.split('-')[1];
+        if(+index === 0) return alert('A router cannot has no interface!');
+        setIP((prev) => prev.filter((val, idx) => idx !== +index));
+        setSubnet((prev) => prev.filter((val, idx) => idx !== +index));
+    }
+
+    const generateIndividualConfiguration = (ip: string, subnet: string, idx: number) => {
+        return (
+            <Box key={idx} component="span" sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <TextField
+                    margin="normal"
+                    required
+                    name={`ip-${idx}`}
+                    label={`IP Address ${idx + 1}`}
+                    type="text"
+                    id={`ip-${idx}`}
+                    defaultValue={ip}
+                    sx={{ width: '40%' }}
+                    onChange={handleUpdateIP}
+                />
+                <TextField
+                    margin="normal"
+                    required
+                    name={`subnet-${idx}`}
+                    label={`Subnet Mask ${idx + 1}`}
+                    type="text"
+                    id={`subnet-${idx}`}
+                    defaultValue={subnet? (subnet.length? subnet : 'none') : 'none'}
+                    select
+                    sx={{ width: '40%' }}
+                    onChange={handleUpdateSubnet}
+                >
+                    <MenuItem key="none" value="none">Select Subnet</MenuItem>
+                    {
+                        Object.keys(Subnet).reverse().map((s) => {
+                            return <MenuItem key={s} value={Subnet[+s]}>/{s}</MenuItem>
+                        })
+                    }
+                </TextField>
+                <IconButton id={`delete-${idx}`} sx={{ width: '10%' }} onClick={deleteIP}>
+                    <DeleteIcon/>
+                </IconButton>
+            </Box>
+        );
+    };
+
     const generateForm = () => (
-        <Box component="form" sx={style} onSubmit={handleSubmit}>
+        <Box component="form" sx={{ ...style, overflowY: 'scroll'}} onSubmit={handleSubmit}>
             <Typography fontSize='1.5rem'>{ connection ? 'Edit Connection' : 'New Connection' }</Typography>
             <TextField
                 margin="normal"
@@ -110,46 +190,28 @@ function CreateEditRS({ projectId, connection, projectDevices, resetEdit, handle
                     })
                 }
             </TextField>
-            <TextField
-                margin="normal"
-                fullWidth
-                required
-                name="ip"
-                label="IP Address"
-                type="text"
-                id="ip"
-                defaultValue={connection ? connection.ip : ''}
-            />
-            <TextField
-                margin="normal"
-                fullWidth
-                required
-                name="subnet"
-                label="Subnet Mask"
-                type="text"
-                id="subnet"
-                defaultValue={connection ? connection.subnet : ''}
-                select
-            >
-                <MenuItem key="none" value="none">Select Subnet</MenuItem>
-                {
-                    Object.keys(Subnet).reverse().map((s) => {
-                        return <MenuItem key={s} value={Subnet[+s]}>/{s}</MenuItem>
-                    })
-                }
-            </TextField>
-            <TextField
-                margin="normal"
-                fullWidth
-                required
-                name="interfacename"
-                label="Interface"
-                type="text"
-                id="interfacename"
-                defaultValue={connection ? connection.interfacename : ''}
-                disabled
-            >
-            </TextField>
+            <Box component="span" sx={{ display: 'flex', justifyContent: 'space-between'}}>
+                <TextField
+                    margin="normal"
+                    required
+                    name="interfacename"
+                    label="Interface"
+                    type="text"
+                    id="interfacename"
+                    defaultValue={connection ? connection.interfacename : ''}
+                    sx={{ width: '70%' }}
+                    disabled
+                />
+                <Button
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2, width: '25%' }}
+                    onClick={addNewIP}
+                >
+                    Add IP
+                </Button>
+            </Box>
+            { ip.map((ip, idx) => generateIndividualConfiguration(ip, subnet[idx], idx)) }
+            { addIPPlaceHolder }
             <Button
                 type="submit"
                 fullWidth

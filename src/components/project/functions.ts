@@ -1,6 +1,7 @@
 import { RouterSwitch, SwitchHost, SwitchSwitch } from "@/models/project";
 import axios, { CancelTokenSource } from "axios";
 import { getURL } from "../global";
+import { ProjectDevice } from "~/device";
 
 export async function getConnection(
     projectId: number, 
@@ -20,14 +21,11 @@ export async function getConnection(
         if (Object.keys(response.data.data).length) {
             switch (connectionType) {
                 case "routerSwitch":
-                    const routerSwitch: RouterSwitch[] = JSON.parse(JSON.stringify(response.data.data.connection));
-                    return routerSwitch;
+                    return JSON.parse(JSON.stringify(response.data.data.connection));
                 case "switchSwitch":
-                    const switchSwitch: SwitchSwitch[] = JSON.parse(JSON.stringify(response.data.data.connection));
-                    return switchSwitch;
+                    return JSON.parse(JSON.stringify(response.data.data.connection));
                 case "switchHost":
-                    const switchHost: SwitchHost[] = JSON.parse(JSON.stringify(response.data.data.connection));
-                    return switchHost;
+                    return JSON.parse(JSON.stringify(response.data.data.connection));
                 default:
                     return null;
             }
@@ -90,5 +88,29 @@ export async function deleteConnection(id1: number, id2: number, id3: number, co
         console.error(e.message);
         alert('Connection deletion failed!');
         return 0;
+    }
+}
+
+export async function getProjectDevices(projectId: number, source: CancelTokenSource): Promise<ProjectDevice | null> {
+    try {
+        const response = await axios.get(`${getURL()}/device/${projectId}`, {
+            cancelToken: source.token
+        });
+
+        if (!response.data.result) {
+            console.error(response.data.message);
+            return null;
+        }
+
+        if (Object.keys(response.data.data).length) {
+            return JSON.parse(JSON.stringify(response.data.data));
+        }
+        return null;
+    } catch (e) {
+        if (e.code !== "ERR_CANCELED") {
+            alert('Error fetching devices in this project!');
+            console.error(e.message);
+        }
+        return null;
     }
 }
