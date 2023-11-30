@@ -211,7 +211,6 @@ function CreateEditRS({ projectId, connection, projectDevices, resetEdit, handle
                 </Button>
             </Box>
             { ip.map((ip, idx) => generateIndividualConfiguration(ip, subnet[idx], idx)) }
-            { addIPPlaceHolder }
             <Button
                 type="submit"
                 fullWidth
