@@ -64,3 +64,8 @@ export async function createDevice(device: Server | Router | Switch | Host, devi
         return 0;
     }
 }
+
+export function isRouter(item: Server[] | Router[] | Switch[] | Host[]): item is Router[] {
+    if (!item.length) return true;
+    return 'routerid' in item[0];
+}

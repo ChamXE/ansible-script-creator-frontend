@@ -15,9 +15,10 @@ import { useState } from 'react';
 import { getURL } from "@/components/global";
 import axios from "axios";
 
-const pages = ['Project', 'Device'];
+const pages = ['Project', 'Device', 'Service'];
 const settings = ['Account', 'Dashboard', 'Logout'];
 const devices = ['Router', 'Switch', 'Host'];
+const services = ['BGP', 'Custom Intent'];
 
 interface NavBarProps {
     setUserToken: (userToken: Token | null) => void;
@@ -29,6 +30,7 @@ function NavBar({ setUserToken, isLoggedIn }: NavBarProps) {
     const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
     const [anchorElDevice, setAnchorElDevice] = useState<null | HTMLElement>(null);
+    const [anchorElService, setAnchorElService] = useState<null | HTMLElement>(null);
 
     const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElUser(event.currentTarget);
@@ -36,6 +38,10 @@ function NavBar({ setUserToken, isLoggedIn }: NavBarProps) {
 
     const handleOpenDeviceMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElDevice(event.currentTarget);
+    }
+
+    const handleOpenServiceMenu = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorElService(event.currentTarget);
     }
 
     const handleCloseNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -47,6 +53,9 @@ function NavBar({ setUserToken, isLoggedIn }: NavBarProps) {
             case "Device":
                 handleOpenDeviceMenu(event);
                 break
+            case "Service":
+                handleOpenServiceMenu(event);
+                break;
             default:
                 break;
         }
@@ -90,6 +99,20 @@ function NavBar({ setUserToken, isLoggedIn }: NavBarProps) {
         }
     }
 
+    const handleCloseServiceMenu = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorElService(null);
+        switch (event.currentTarget.textContent) {
+            case "BGP":
+                navigate('/service/bgp');
+                break;
+            case "Custom Intent":
+                console.log("Custom Intent");
+                break;
+            default:
+                break;
+        }
+    }
+
     return (
         <AppBar position="static" >
             <Container maxWidth={false} sx={{ marginLeft: "0px", marginRight: "0px" }}>
@@ -116,30 +139,6 @@ function NavBar({ setUserToken, isLoggedIn }: NavBarProps) {
                         isLoggedIn ?
                             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                                 <Menu
-                                    id="menu-appbar"
-                                    anchorEl={anchorElNav}
-                                    anchorOrigin={{
-                                        vertical: 'bottom',
-                                        horizontal: 'left',
-                                    }}
-                                    keepMounted
-                                    transformOrigin={{
-                                        vertical: 'top',
-                                        horizontal: 'left',
-                                    }}
-                                    open={Boolean(anchorElNav)}
-                                    onClose={handleCloseNavMenu}
-                                    sx={{
-                                        display: { xs: 'block', md: 'none' },
-                                    }}
-                                >
-                                    { isLoggedIn && pages.map((page) => (
-                                        <MenuItem key={page} onClick={handleCloseNavMenu}>
-                                            <Typography textAlign="center">{page}</Typography>
-                                        </MenuItem>
-                                    ))}
-                                </Menu>
-                                <Menu
                                     sx={{ mt: '45px' }}
                                     id="device-appbar"
                                     anchorEl={anchorElDevice}
@@ -158,6 +157,50 @@ function NavBar({ setUserToken, isLoggedIn }: NavBarProps) {
                                     { isLoggedIn && devices.map((devices) => (
                                         <MenuItem key={devices} onClick={handleCloseDeviceMenu}>
                                             <Typography textAlign="center">{devices}</Typography>
+                                        </MenuItem>
+                                    ))}
+                                </Menu>
+                                <Menu
+                                    sx={{ mt: '45px' }}
+                                    id="services-appbar"
+                                    anchorEl={anchorElService}
+                                    anchorOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                    }}
+                                    keepMounted
+                                    transformOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                    }}
+                                    open={Boolean(anchorElService)}
+                                    onClose={handleCloseServiceMenu}
+                                >
+                                    { isLoggedIn && services.map((services) => (
+                                        <MenuItem key={services} onClick={handleCloseServiceMenu}>
+                                            <Typography textAlign="center">{services}</Typography>
+                                        </MenuItem>
+                                    ))}
+                                </Menu>
+                                <Menu
+                                    sx={{ mt: '45px' }}
+                                    id="menu-appbar"
+                                    anchorEl={anchorElUser}
+                                    anchorOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                    }}
+                                    keepMounted
+                                    transformOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                    }}
+                                    open={Boolean(anchorElUser)}
+                                    onClose={handleCloseUserMenu}
+                                >
+                                    {settings.map((setting) => (
+                                        <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                                            <Typography textAlign="center">{setting}</Typography>
                                         </MenuItem>
                                     ))}
                                 </Menu>
@@ -187,28 +230,6 @@ function NavBar({ setUserToken, isLoggedIn }: NavBarProps) {
                                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                                     <AccountCircleIcon fontSize='large' />
                                 </IconButton>
-                                <Menu
-                                    sx={{ mt: '45px' }}
-                                    id="menu-appbar"
-                                    anchorEl={anchorElUser}
-                                    anchorOrigin={{
-                                        vertical: 'top',
-                                        horizontal: 'right',
-                                    }}
-                                    keepMounted
-                                    transformOrigin={{
-                                        vertical: 'top',
-                                        horizontal: 'right',
-                                    }}
-                                    open={Boolean(anchorElUser)}
-                                    onClose={handleCloseUserMenu}
-                                >
-                                    {settings.map((setting) => (
-                                        <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                            <Typography textAlign="center">{setting}</Typography>
-                                        </MenuItem>
-                                    ))}
-                                </Menu>
                             </Box>
                         :
                             <></>

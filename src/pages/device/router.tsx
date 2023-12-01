@@ -1,12 +1,12 @@
 import useToken from '@/components/app/useToken';
-import { deleteDevice, getDevice } from '@/components/device/functions';
+import { deleteDevice, getDevice, isRouter } from '@/components/device/functions';
 import { getProject } from '@/components/global';
 import { Box, Container, Divider, IconButton, Typography } from '@mui/material';
 import axios from 'axios';
 import * as React from 'react';
 import { DataGrid, GridColDef, GridRenderCellParams, GridValueFormatterParams, useGridApiRef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
-import { Server, Router, Switch, Host, RouterConfiguration } from '~/device';
+import { Router, RouterConfiguration } from '~/device';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Project } from '@/models/project';
@@ -94,11 +94,6 @@ function RouterList() {
             )
         }
     ];
-
-    function isRouter(item: Server[] | Router[] | Switch[] | Host[]): item is Router[] {
-        if (!item.length) return true;
-        return 'routerid' in item[0];
-    }
 
     const noRowsOverlay = () => (
         <Typography align='center' p='2rem'> No data! </Typography>

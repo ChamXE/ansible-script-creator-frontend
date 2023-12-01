@@ -12,6 +12,7 @@ import ServerList from '@/pages/device/server';
 import HostList from '@/pages/device/host';
 import RouterList from '@/pages/device/router';
 import ProjectList from '@/pages/project/project';
+import BGP from '@/pages/service/bgp';
 import axios from "axios";
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -79,6 +80,10 @@ function App() {
 						<Route
 							path="/project"
 							element={renderProtectedRoute(<ProjectList />)}
+						/>
+						<Route
+							path="/service/bgp"
+							element={renderProtectedRoute(<BGP />)}
 						/>
 					</Routes>
 				</div>
