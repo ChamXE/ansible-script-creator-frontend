@@ -90,7 +90,7 @@ function ViewBGP({ handleResetViewBGP, routerid }: ViewBGPProps) {
             type: 'string',
             renderCell: (params: GridRenderCellParams) => {
                 const { network } = params.api.getRow(params.id!);
-                if(!network.length) return (<p> N/A </p>);
+                if(!network) return (<p> N/A </p>);
                 return (
                     <Box key={params.id!}>
                         {

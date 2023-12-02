@@ -59,6 +59,7 @@ function CreateEditRS({ projectId, connection, projectDevices, resetEdit, handle
         ip.forEach((elem, idx) => {
             configuration[elem] = subnet[idx]
         });
+        const peer = formData.get('peer');
         const routerSwitch: RouterSwitch = {
             projectid: projectId,
             routerid: +routerId,
@@ -66,6 +67,7 @@ function CreateEditRS({ projectId, connection, projectDevices, resetEdit, handle
             portname: routername + switchname,
             configuration: configuration,
             interfacename: connection ? connection.interfacename : null,
+            peer: peer? peer.toString() : null
         }
         let result: number;
         if(connection) {
@@ -122,7 +124,7 @@ function CreateEditRS({ projectId, connection, projectDevices, resetEdit, handle
                     type="text"
                     id={`ip-${idx}`}
                     defaultValue={ip}
-                    sx={{ width: '40%' }}
+                    sx={{ width: idx === 0 ? '25%' : '40%' }}
                     onChange={handleUpdateIP}
                 />
                 <TextField
@@ -134,7 +136,7 @@ function CreateEditRS({ projectId, connection, projectDevices, resetEdit, handle
                     id={`subnet-${idx}`}
                     defaultValue={subnet? (subnet.length? subnet : 'none') : 'none'}
                     select
-                    sx={{ width: '40%' }}
+                    sx={{ width: idx === 0 ? '25%' : '40%' }}
                     onChange={handleUpdateSubnet}
                 >
                     <MenuItem key="none" value="none">Select Subnet</MenuItem>
@@ -144,6 +146,19 @@ function CreateEditRS({ projectId, connection, projectDevices, resetEdit, handle
                         })
                     }
                 </TextField>
+                {
+                    idx === 0 ? (
+                        <TextField
+                            margin="normal"
+                            name="peer"
+                            label={`Peer IP`}
+                            type="text"
+                            id="peer"
+                            defaultValue={ connection?.peer ?? ''}
+                            sx={{ width: '25%' }}
+                        />
+                    ) : <></>
+                }
                 <IconButton id={`delete-${idx}`} sx={{ width: '10%' }} onClick={deleteIP}>
                     <DeleteIcon/>
                 </IconButton>

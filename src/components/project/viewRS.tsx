@@ -19,7 +19,7 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: '45rem',
+    width: '55rem',
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
@@ -50,15 +50,16 @@ function ViewRS ({ project, resetRS }: ViewRSProps) {
 
     const column: GridColDef[] = [
         {
-            field: 'routerid', headerName: 'Router Name', flex: 1, type: 'string', valueFormatter: (params: GridValueFormatterParams<number>) => {
+            field: 'routerid', headerName: 'Router Name', flex: 0.75, type: 'string', valueFormatter: (params: GridValueFormatterParams<number>) => {
                 return projectDevices?.router.filter(({ routerid }) => routerid === params.value)[0].routername;
             }
         },
         {
-            field: 'switchid', headerName: 'Switch Name', flex: 1, type: 'string', valueFormatter: (params: GridValueFormatterParams<number>) => {
+            field: 'switchid', headerName: 'Switch Name', flex: 0.75, type: 'string', valueFormatter: (params: GridValueFormatterParams<number>) => {
                 return projectDevices?.switch.filter(({ switchid }) => switchid === params.value)[0].switchname;
             }
         },
+        { field: 'interfacename', headerName: 'Interface Name', flex: 1, type: 'string', },
         {
             field: 'configuration-ip',
             headerName: 'IP Address',
@@ -89,6 +90,11 @@ function ViewRS ({ project, resetRS }: ViewRSProps) {
                     if(i !== ips.length-1) returnValue += "\n";
                 }
                 return returnValue;
+            }
+        },
+        {
+            field: 'peer', headerName: 'Peer', flex: 1, type: 'string', valueFormatter: (params: GridValueFormatterParams<string>) => {
+                return params.value?? "N/A";
             }
         },
         {
