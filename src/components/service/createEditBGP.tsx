@@ -287,14 +287,15 @@ function CreateEditBGP({ bgp, routerid, resetEdit, handleNewDataIncoming }: Crea
         </Box>
     )
 
-    async function createBGPConfiguration(bgp: BGP): Promise<number> {
+    async function createBGPConfiguration(b: BGP): Promise<number> {
         try {
-            const response = await axios.post(`${getURL()}/service/bgp`, bgp);
+            const response = await axios.post(`${getURL()}/service/bgp`, b);
             if (!response.data.result) {
                 console.error(response.data.message);
                 return 0;
             }
-            alert('BGP configuration successfully created!');
+            if(bgp) alert('BGP configuration successfully updated!');
+            else alert('BGP configuration successfully created!');
             return 1;
         } catch (e) {
             console.error(e.message);

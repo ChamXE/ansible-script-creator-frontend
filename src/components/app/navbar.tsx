@@ -106,7 +106,7 @@ function NavBar({ setUserToken, isLoggedIn }: NavBarProps) {
                 navigate('/service/bgp');
                 break;
             case "Custom Intent":
-                console.log("Custom Intent");
+                navigate('/service/customIntent');
                 break;
             default:
                 break;
