@@ -27,9 +27,9 @@ function SwitchList() {
             field: 'controller',
             headerName: 'Controller',
             flex: 1,
-            type: 'string',
-            valueFormatter: (params: GridValueFormatterParams<string>) => {
-                return !!params.value ? '✔️' : '❌';
+            type: 'boolean',
+            valueFormatter: (params: GridValueFormatterParams<boolean>) => {
+                return params.value ? '✔️' : '❌';
             }
         },
         {

@@ -26,7 +26,6 @@ const style = {
 
 function CreateEditSwitch({ switchR, project, resetEdit, newDataIncoming }: CreateEditSwitchProps) {
     const [open, setOpen] = useState(!!switchR);
-    const controller = process.env.REACT_APP_CONTROLLER!;
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
@@ -81,7 +80,7 @@ function CreateEditSwitch({ switchR, project, resetEdit, newDataIncoming }: Crea
                     row
                     aria-labelledby="demo-row-radio-buttons-group-label"
                     name="controller"
-                    defaultValue={switchR ? `${!!switchR.controller}` : 'true'}
+                    defaultValue={switchR ? `${switchR.controller}` : 'true'}
                 >
                     <FormControlLabel value="true" control={<Radio />} label="True" />
                     <FormControlLabel value="false" control={<Radio />} label="False" />
@@ -109,7 +108,7 @@ function CreateEditSwitch({ switchR, project, resetEdit, newDataIncoming }: Crea
             switchid: switchR ? switchR.switchid : null,
             projectid: +projectId,
             switchname: formData.get('switchname')!.toString(),
-            controller: needController === "true" ? controller : null,
+            controller: needController === "true",
         }
 
         if (s) {
