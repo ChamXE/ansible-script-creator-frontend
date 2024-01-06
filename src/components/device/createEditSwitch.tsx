@@ -76,7 +76,7 @@ function CreateEditSwitch({ switchR, project, resetEdit, newDataIncoming }: Crea
                 }
             </TextField>
             <FormControl required>
-                <FormLabel id="controller">Enable STP</FormLabel>
+                <FormLabel id="controller">Controller Required</FormLabel>
                 <RadioGroup
                     row
                     aria-labelledby="demo-row-radio-buttons-group-label"

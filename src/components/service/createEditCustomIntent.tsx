@@ -75,9 +75,10 @@ function CreateEditCustomIntent({ customIntent, projectid, resetEdit, handleNewD
 
     const handleUpdate = (event: React.ChangeEvent<HTMLInputElement>) => {
         const indexItem = event.target.name ? event.target.name.split('-') : event.currentTarget.id.split('-');
+        const newVal = event.target.value;
         setIntermediate((prev) => prev.map((n, idx) => {
             if (idx !== +indexItem[1]) return n;
-            return event.target.value;
+            return newVal;
         }))
     }
 

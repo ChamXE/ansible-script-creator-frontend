@@ -87,16 +87,18 @@ function CreateEditRS({ projectId, connection, projectDevices, resetEdit, handle
 
     const handleUpdateIP = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         const index = event.currentTarget.id.split('-')[1];
+        const newVal = event.currentTarget.value;
         setIP((prev) => prev.map((value, idx) => {
-            if(idx === +index) return event.currentTarget.value;
+            if(idx === +index) return newVal;
             return value;
         }))
     }
 
     const handleUpdateSubnet = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         const index = event.target.name.split('-')[1];
+        const newVal = event.target.value;
         setSubnet((prev) => prev.map((value, idx) => {
-            if(idx === +index) return event.target.value;
+            if(idx === +index) return newVal;
             return value;
         }))
     }
