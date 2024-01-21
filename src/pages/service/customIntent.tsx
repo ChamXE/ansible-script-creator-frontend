@@ -93,7 +93,7 @@ function CustomIntent() {
             sx={{mt: '1.5rem', ml: '3rem', maxWidth: '95vw !important'}}
         >
             <Box component="span" mb="1rem" display="flex" alignItems="center">
-                <Typography fontSize='1.5rem'>Routers</Typography>
+                <Typography fontSize='1.5rem'>Projects</Typography>
             </Box>
             { project && generateTable(project) }
             { viewCustomIntent }

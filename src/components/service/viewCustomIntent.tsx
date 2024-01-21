@@ -74,7 +74,7 @@ function ViewCustomIntent({ projectid, handleResetViewCustomIntent }: ViewCustom
             flex: 0.6,
             type: 'string',
             valueFormatter: (params: GridValueFormatterParams<string>) => {
-                return params.value.length ? params.value : "N/A";
+                return params.value ? (params.value.length? params.value : "N/A") : "N/A";
             }
         },
         {
